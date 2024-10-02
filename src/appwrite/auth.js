@@ -28,6 +28,22 @@ class AuthService {
     }
   }
 
+  async addPrefrencess(data) {
+    try {
+      return await this.account.updatePrefs(data);
+    } catch (error) {
+      console.log("Addprefrencess :", error);
+    }
+  }
+
+  async getPrefrencess() {
+    try {
+      return await this.account.getPrefs();
+    } catch (error) {
+      console.log("getPrefrencess :", error);
+    }
+  }
+
   async Login(email, password) {
     try {
       return await this.account.createEmailPasswordSession(email, password);

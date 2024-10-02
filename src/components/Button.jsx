@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const Button = ({
   className,
+  children,
   text = "submit",
   type = "submit",
   bgColor = "bg-red-600 ",
@@ -18,6 +19,7 @@ const Button = ({
         {...props}
       >
         {text}
+        {children}
       </button>
     </div>
   );

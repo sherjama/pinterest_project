@@ -27,7 +27,7 @@ const PinsGrid = ({ pin }) => {
         next={fetchMoreData}
         hasMore={visibleImages.length < pinsDisplayed.length}
         loader={<h4>Loading...</h4>}
-        className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 p-4"
+        className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 p-4"
       >
         {pinsDisplayed.map((pinInfo, index) => (
           <Pin key={pinInfo.$id} pinData={pinInfo} />

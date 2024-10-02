@@ -25,6 +25,7 @@ class Service {
     image,
     status,
     auther,
+    autherDp,
   }) {
     try {
       return await this.databases.createDocument(
@@ -41,6 +42,7 @@ class Service {
           image,
           status,
           auther,
+          autherDp,
         }
       );
     } catch (error) {

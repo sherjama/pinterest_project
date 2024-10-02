@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PinsGrid } from "../components";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { addPins } from "../store/pinSlice";
+import appwriteService from "../appwrite/config";
 
 const Home = () => {
-  const pins = useSelector((state) => state.pins.pins);
+  const [pins, setPins] = useState([]);
+  const status = useSelector((state) => state.authStatus.status);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (status) {
+      appwriteService.ListPosts().then((posts) => {
+        posts ? setPins(posts) : null;
+      });
+    }
+    if (pins) {
+      dispatch(addPins(pins));
+    }
+  }, [pins, setPins]);
+
+  const StoredPins = useSelector((state) => state.pins.pins);
 
   return (
     <div className=" w-full ">
-      <PinsGrid pin={pins} />
+      <PinsGrid pin={StoredPins} />
     </div>
   );
 };

@@ -21,7 +21,7 @@ const SearchBar = ({ className = "" }) => {
   };
 
   return (
-    <div className={`${className} mx-auto h-12 `}>
+    <div className={`${className} h-12 `}>
       <form
         onSubmit={handleSearch}
         className={`h-full relative flex items-center justify-center

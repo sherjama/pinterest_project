@@ -1,6 +1,9 @@
 // icons
+import { FaCamera } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+//loader
+import { ThreeCircles } from "react-loader-spinner";
 // react
 import { React, useEffect, useState } from "react";
 // react-hook-form
@@ -12,9 +15,10 @@ import { Logo, Input } from "../components/index";
 // authService
 import authservice from "../appwrite/auth";
 // import { OAuthProvider } from "appwrite";
+import appwriteService from "../appwrite/config";
 
 // react-redux redux-toolkit
-import { login, session as authSassion } from "../store/authSlice";
+import { login, session as authSassion, setPref } from "../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const LoginSignup = () => {
@@ -29,6 +33,9 @@ const LoginSignup = () => {
   const [isLogin, setIsLogin] = useState();
   const [isSignup, setIsSignup] = useState();
   const [error, setError] = useState("");
+  const [image, setImage] = useState();
+  const [prevImage, setPrevImage] = useState();
+  const [toggle, setToggle] = useState(false);
 
   // react-hook-form
   const {
@@ -44,7 +51,17 @@ const LoginSignup = () => {
   }, [useParams, what]);
 
   // functions
-  const onSubmit = async ({ email, password, name }) => {
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+
+    setImage(file ? file : null);
+    setPrevImage(file ? URL.createObjectURL(file) : null);
+  };
+
+  const onSubmit = async ({ email, password, name, profilePicture }) => {
+    !toggle ? setToggle(true) : setToggle(false);
     setError("");
     // LoginPage
     if (isLogin) {
@@ -76,18 +93,38 @@ const LoginSignup = () => {
 
           localStorage.setItem("session", JSON.stringify(session));
 
-          navigate("/business");
+          const prefs = await authservice.getPrefrencess();
+
+          prefs ? dispatch(setPref(prefs)) : null;
+          localStorage.setItem("prefs", JSON.stringify(prefs));
+          navigate("/home");
         }
       } catch (error) {
         setError(error.mesage);
       }
     } else {
+      console.log(profilePicture);
+
       // signiUp page
       try {
         const data = await authservice.CreateAccout(email, password, name);
 
         if (data) {
           const userdata = await authservice.getCurrentUser();
+          const file = image ? await appwriteService.uploadFile(image) : null;
+          if (file) {
+            const fileId = file.$id;
+            console.log(fileId);
+            const prefs = await authservice.addPrefrencess({
+              displayPicture: fileId,
+            });
+
+            if (prefs) {
+              const pref = await authservice.getPrefrencess();
+              dispatch(setPref(pref));
+              localStorage.setItem("prefs", JSON.stringify(pref));
+            }
+          }
 
           if (userdata) {
             const userData = {
@@ -97,7 +134,6 @@ const LoginSignup = () => {
             };
 
             dispatch(login(userData));
-
             // sending redux data to localStorage
             localStorage.setItem("userdata", JSON.stringify(userData));
             localStorage.setItem("id", JSON.stringify(email));
@@ -145,12 +181,42 @@ const LoginSignup = () => {
     <div className="min-h-[90vh] w-full flex justify-center items-center ">
       <div className="bg-white shadow-md rounded-[4rem] p-8 w-full max-w-md min-h-96 border-2 border-solid border-gray-100">
         <div className="flex flex-col items-center justify-center">
-          <div className="p-6">
-            <Logo size={50} />
+          <div>
+            {isLogin && (
+              <div className="p-6">
+                <Logo size={50} />
+              </div>
+            )}
           </div>
-          <h1 className="text-2xl  text-center mb-6 font-Primary font-medium text-gray-900">
-            Welcome to Pinterest
-          </h1>
+
+          <div>
+            {isSignup && (
+              <div>
+                {image ? (
+                  <img
+                    src={prevImage}
+                    alt="Preview"
+                    className="size-40 rounded-full object-cover mb-4 hover:backdrop-blur-3xl hover:opacity-50"
+                  />
+                ) : (
+                  <label className="size-40 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500">
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="image/png, image/jpg, image/jpeg, image/gif"
+                      onChange={handleImageChange}
+                      // {...register("profilePicture")}
+                    />
+                    <span className="text-gray-400 flex items-center justify-center flex-col-reverse">
+                      add profile picture
+                      <FaCamera size={50} />
+                    </span>
+                  </label>
+                )}
+              </div>
+            )}
+          </div>
+
           {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -209,10 +275,21 @@ const LoginSignup = () => {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-red-600 text-white py-2 px-4 rounded-3xl font-Primary font-semibold
+            className=" flex items-center justify-center w-full bg-red-600 text-white py-2 px-4 rounded-3xl font-Primary font-semibold
              hover:bg-red-800 transition"
           >
-            {isLogin ? "Log in" : "Create account"}
+            {!toggle && <p>{isLogin ? "Log in" : "Create account"}</p>}
+            {toggle && (
+              <ThreeCircles
+                visible={true}
+                height="30"
+                width="30"
+                color="#ffff"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            )}
           </button>
 
           {/* Divider */}

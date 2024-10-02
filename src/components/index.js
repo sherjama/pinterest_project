@@ -15,6 +15,7 @@ import Error404Page from "../pages/404";
 import CreateUpdatePinPage from "./CreateUpdatePin/CreateUpdatePin";
 import Input from "./Input";
 import SearchBar from "./SearchBar";
+import Dp from "./Dp";
 
 export {
   Header,
@@ -33,5 +34,6 @@ export {
   CreateUpdatePinPage,
   Button,
   SearchBar,
+  Dp,
   Input,
 };

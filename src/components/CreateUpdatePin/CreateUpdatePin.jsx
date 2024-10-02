@@ -1,3 +1,7 @@
+// icon
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { ThreeCircles } from "react-loader-spinner";
+// react
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,17 +13,24 @@ import { AppwriteException } from "appwrite";
 
 const CreateUpdatePin = ({ pin }) => {
   //   states
+  const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [prevPin, setPrevpin] = useState(null);
   const [tags, setTags] = useState([]);
+  const [inputTag, setInputTag] = useState("");
 
   //   redux
   const dispatch = useDispatch();
-  const userdata = useSelector((state) => state.authStatus.userdata);
 
-  useEffect(() => {
-    console.log(userdata.$id);
-  }, []);
+  const authSlice = useSelector((state) => state.authStatus);
+
+  const { userdata, prefs } = authSlice;
+
+  // console.log(prefs.displayPicture);
+
+  // useEffect(() => {
+  //   console.log(userdata.$id);
+  // }, []);
 
   // react-router
   const { state } = useParams();
@@ -32,6 +43,12 @@ const CreateUpdatePin = ({ pin }) => {
     reset,
   } = useForm();
 
+  useEffect(() => {
+    return () => {
+      setLoading(false);
+    };
+  }, []);
+
   //   function's
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -39,12 +56,14 @@ const CreateUpdatePin = ({ pin }) => {
     setPrevpin(file ? URL.createObjectURL(file) : null);
   };
 
-  const handleTagChange = (e) => {
-    e.preventDefault();
-    const newTag = e.target.value.trim();
-    if (e.key === "Enter" && newTag && !tags.includes(newTag)) {
-      setTags([...tags, newTag]);
-      e.target.value = "";
+  const handleTagChange = (event) => {
+    const key = event.which || event.code;
+    const char = String.fromCharCode(key);
+
+    if (char === " ") {
+      inputTag.trim();
+      setTags([...tags, inputTag]);
+      setInputTag("");
     }
   };
 
@@ -53,7 +72,10 @@ const CreateUpdatePin = ({ pin }) => {
   };
 
   const onSubmit = async (data) => {
+    setLoading(true);
     console.log("Form Data: ", { ...data, image, tags });
+
+    data.tag = tags;
 
     if (pin) {
       const file = image ? await appwriteService.uploadFile(image) : null;
@@ -80,6 +102,7 @@ const CreateUpdatePin = ({ pin }) => {
           ...data,
           userId: userdata.$id,
           auther: userdata.name,
+          autherDp: prefs.displayPicture,
         });
 
         if (createPin) {
@@ -107,7 +130,7 @@ const CreateUpdatePin = ({ pin }) => {
               <img
                 src={prevPin}
                 alt="Preview"
-                className="w-full h-48 object-cover rounded-md mb-4"
+                className="w-full min-h-52 object-cover rounded-md mb-4"
               />
             ) : (
               <label className="w-full h-48 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:border-blue-500">
@@ -203,15 +226,22 @@ const CreateUpdatePin = ({ pin }) => {
               htmlFor="tags"
               className="block text-sm font-medium text-gray-700"
             >
-              Tags (Press Enter to add a tag)
+              Tags (Press space to add a tag)
             </label>
-            <input
-              type="text"
-              id="tags"
-              onKeyDown={handleTagChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              placeholder="Enter tags"
-            />
+            <div className="flex items-center justify-between">
+              <input
+                type="text"
+                id="tags"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Enter tags"
+                value={inputTag}
+                onChange={(e) => setInputTag(e.target.value)}
+                onKeyDown={handleTagChange}
+              />
+              <div onClick={handleTagChange}>
+                <IoIosAddCircleOutline size={30} color="red" />
+              </div>
+            </div>
             <div className="flex flex-wrap mt-2">
               {tags.map((tag, index) => (
                 <div
@@ -232,7 +262,23 @@ const CreateUpdatePin = ({ pin }) => {
           </div>
 
           {/* Submit Button */}
-          <Button type="submit" className="m-auto relative" text="Create Pin" />
+          <Button
+            type="submit"
+            className="m-auto relative"
+            text={`${loading ? "" : "Submit"}`}
+          >
+            {loading && (
+              <ThreeCircles
+                visible={true}
+                height="30"
+                width="30"
+                color="#ffff"
+                ariaLabel="three-circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            )}
+          </Button>
         </form>
       </div>
     </div>

@@ -1,21 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Header, Footer } from "./components/index";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import appwriteService from "./appwrite/config";
-import { addPins } from "./store/pinSlice";
+import { addPins, deletePins } from "./store/pinSlice";
 
 const App = () => {
+  const [pins, setPins] = useState([]);
+  const status = useSelector((state) => state.authStatus.status);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
-    appwriteService
-      .ListPosts()
-      .then((posts) => {
-        posts ? dispatch(addPins(posts)) : null;
-      })
-      .finally(navigate("/home"));
-  });
+    if (status) {
+      appwriteService.ListPosts().then((posts) => {
+        posts ? setPins(posts) : null;
+      });
+    }
+    if (pins) {
+      dispatch(addPins(pins));
+    }
+  }, [pins, setPins]);
 
   return (
     <>
