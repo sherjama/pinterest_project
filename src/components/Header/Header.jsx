@@ -51,12 +51,11 @@ const Header = ({ className = "" }) => {
   };
 
   const menuHandler = () => {
-    navigate("/");
-    // if (!toggle) {
-    //   setToggle(true);
-    // } else {
-    //   setToggle(false);
-    // }
+    if (!toggle) {
+      setToggle(true);
+    } else {
+      setToggle(false);
+    }
   };
 
   // useEffect's
@@ -162,13 +161,13 @@ const Header = ({ className = "" }) => {
         </div>
       </div>
 
-      {/* navigations 
+      {/* navigations  */}
       <div
         className={`w-full h-[80vh]  absolute top-[10%] flex justify-evenly items-center bg-white z-10 ${
           toggle ? "" : "hidden"
         }`}
       >
-        Shortcuts 
+        {/* Shortcuts */}
         <div className="h-5/6 min-w-52  ">
           <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5">
             Shortcuts
@@ -194,9 +193,7 @@ const Header = ({ className = "" }) => {
             </Link>
           </nav>
         </div>
-
         <span className="w-[2px] h-4/5 bg-slate-800"></span>
-
         <div className="h-5/6 min-w-52 ">
           <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5">
             Create
@@ -211,20 +208,18 @@ const Header = ({ className = "" }) => {
           </nav>
         </div>
         <span className="sm:w-[2px] sm:h-4/5 bg-slate-800 max-sm:hidden"></span>
-
         <div className="sm:h-5/6 sm:min-w-52 max-sm:hidden">
           <h2 className="font-Primary text-gray-950 font-semibold  text-xl ">
             Create1
           </h2>
         </div>
         <span className="max-sm:hidden w-[2px] h-4/5 bg-slate-800"></span>
-
         <div className="sm:h-5/6 sm:min-w-52  max-sm:hidden">
           <h2 className="font-Primary text-gray-950 font-semibold  text-xl">
             Create2
           </h2>
         </div>
-      </div> */}
+      </div>
     </>
   );
 };
