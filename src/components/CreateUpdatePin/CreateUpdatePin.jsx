@@ -56,14 +56,21 @@ const CreateUpdatePin = ({ pin }) => {
     setPrevpin(file ? URL.createObjectURL(file) : null);
   };
 
-  const handleTagChange = (event) => {
+  const handleTagChange = (event, byAddButton) => {
     const key = event.which || event.code;
     const char = String.fromCharCode(key);
 
-    if (char === " ") {
-      inputTag.trim();
-      setTags([...tags, inputTag]);
-      setInputTag("");
+    if (!inputTag.length < 0) {
+      if (char === " ") {
+        inputTag.trim();
+        setTags([...tags, inputTag]);
+        setInputTag("");
+      }
+      if (byAddButton) {
+        inputTag.trim();
+        setTags([...tags, inputTag]);
+        setInputTag("");
+      }
     }
   };
 
@@ -238,7 +245,7 @@ const CreateUpdatePin = ({ pin }) => {
                 onChange={(e) => setInputTag(e.target.value)}
                 onKeyDown={handleTagChange}
               />
-              <div onClick={handleTagChange}>
+              <div onClick={(e) => handleTagChange(e, true)}>
                 <IoIosAddCircleOutline size={30} color="red" />
               </div>
             </div>
