@@ -18,6 +18,7 @@ const CreateUpdatePin = ({ pin }) => {
   const [prevPin, setPrevpin] = useState(null);
   const [tags, setTags] = useState([]);
   const [inputTag, setInputTag] = useState("");
+  const [fileError, setFileError] = useState("");
 
   //   redux
   const dispatch = useDispatch();
@@ -102,18 +103,23 @@ const CreateUpdatePin = ({ pin }) => {
     } else {
       const file = image ? await appwriteService.uploadFile(image) : null;
 
-      if (file) {
-        data.image = file.$id;
-        data.status = true;
-        const createPin = await appwriteService.CreatePost({
-          ...data,
-          userId: userdata.$id,
-          auther: userdata.name,
-          autherDp: prefs.displayPicture,
-        });
+      if (file === null) {
+        setFileError("image is required");
+        setLoading(false);
+      } else {
+        if (file) {
+          data.image = file.$id;
+          data.status = true;
+          const createPin = await appwriteService.CreatePost({
+            ...data,
+            userId: userdata.$id,
+            auther: userdata.name,
+            autherDp: prefs.displayPicture,
+          });
 
-        if (createPin) {
-          navigate("/home");
+          if (createPin) {
+            navigate("/home");
+          }
         }
       }
     }
@@ -149,6 +155,9 @@ const CreateUpdatePin = ({ pin }) => {
                 />
                 <span className="text-gray-400">Click to upload an image</span>
               </label>
+            )}
+            {fileError && (
+              <p className="text-red-500 text-sm mt-1">{fileError}</p>
             )}
           </div>
 

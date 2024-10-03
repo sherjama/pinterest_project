@@ -37,7 +37,7 @@ const Header = ({ className = "" }) => {
     // auth Logout
     authservice.Logout(sessionID.$id).then(dispatch(logout()));
 
-    navigate("/about");
+    navigate("/");
 
     // Removing data of localSorage
     localStorage.removeItem("userdata");
@@ -65,7 +65,7 @@ const Header = ({ className = "" }) => {
 
   return (
     <>
-      <div className={`${className} flex  justify-between items-center mt-1`}>
+      <div className={`${className} flex  justify-between items-center `}>
         <div className="w-[85%] h-full flex items-center justify-between max-md:justify-start max-sm:w-[40%]  space-x-8 px-3 ">
           {/* Logo  */}
           <div

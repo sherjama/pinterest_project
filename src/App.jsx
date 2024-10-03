@@ -24,8 +24,8 @@ const App = () => {
   return (
     <>
       <div className="w-full h-screen ">
-        <Header className="w-full h-[10%] z-20 fixed top-0 bg-white" />
-        <div className="w-full h-[10%]"></div>
+        <Header className="w-full h-[12%] z-20 fixed top-0 bg-white" />
+        <div className="w-full h-[12%]"></div>
         <main className="w-full min-h-min ">
           <Outlet />
         </main>

@@ -47,6 +47,7 @@ class Service {
       );
     } catch (error) {
       console.log("CreatePost :", error);
+      throw error;
     }
   }
 
@@ -66,6 +67,7 @@ class Service {
       );
     } catch (error) {
       console.log("UpdatePost", error);
+      throw error;
     }
   }
 
@@ -79,7 +81,7 @@ class Service {
       return true;
     } catch (error) {
       console.log("DeletePost :", error);
-      return false;
+      throw error;
     }
   }
 
@@ -92,7 +94,7 @@ class Service {
       );
     } catch (error) {
       console.log("GetPost :", error);
-      return false;
+      throw error;
     }
   }
 
@@ -105,7 +107,7 @@ class Service {
       );
     } catch (error) {
       console.log("ListPosts :", error);
-      return false;
+      throw error;
     }
   }
 
@@ -120,7 +122,7 @@ class Service {
       );
     } catch (error) {
       console.log("Appwrite serive :: uploadFile :: error", error);
-      return false;
+      throw error;
     }
   }
 
@@ -130,7 +132,7 @@ class Service {
       return true;
     } catch (error) {
       console.log("Appwrite serive :: deleteFile :: error", error);
-      return false;
+      throw error;
     }
   }
 

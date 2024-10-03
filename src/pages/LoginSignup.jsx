@@ -32,7 +32,7 @@ const LoginSignup = () => {
   // states
   const [isLogin, setIsLogin] = useState();
   const [isSignup, setIsSignup] = useState();
-  const [error, setError] = useState("");
+  const [globelError, setGlobelError] = useState("");
   const [image, setImage] = useState();
   const [prevImage, setPrevImage] = useState();
   const [toggle, setToggle] = useState(false);
@@ -62,7 +62,7 @@ const LoginSignup = () => {
 
   const onSubmit = async ({ email, password, name, profilePicture }) => {
     !toggle ? setToggle(true) : setToggle(false);
-    setError("");
+    setGlobelError("");
     // LoginPage
     if (isLogin) {
       try {
@@ -99,12 +99,11 @@ const LoginSignup = () => {
           localStorage.setItem("prefs", JSON.stringify(prefs));
           navigate("/home");
         }
-      } catch (error) {
-        setError(error.mesage);
+      } catch (e) {
+        setGlobelError(e.message);
+        e ? setToggle(false) : null;
       }
     } else {
-      console.log(profilePicture);
-
       // signiUp page
       try {
         const data = await authservice.CreateAccout(email, password, name);
@@ -149,8 +148,9 @@ const LoginSignup = () => {
 
           navigate("/home");
         }
-      } catch (error) {
-        setError(error.mesage);
+      } catch (e) {
+        setGlobelError(e.message);
+        e ? setToggle(false) : null;
       }
     }
   };
@@ -217,7 +217,9 @@ const LoginSignup = () => {
             )}
           </div>
 
-          {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+          {globelError && (
+            <p className="text-red-600 mt-8 text-center">{globelError}</p>
+          )}
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* name Input */}

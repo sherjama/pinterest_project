@@ -25,6 +25,7 @@ class AuthService {
       }
     } catch (error) {
       console.log("createAccout :", error);
+      throw error;
     }
   }
 
@@ -33,6 +34,7 @@ class AuthService {
       return await this.account.updatePrefs(data);
     } catch (error) {
       console.log("Addprefrencess :", error);
+      throw error;
     }
   }
 
@@ -41,6 +43,7 @@ class AuthService {
       return await this.account.getPrefs();
     } catch (error) {
       console.log("getPrefrencess :", error);
+      throw error;
     }
   }
 
@@ -50,6 +53,7 @@ class AuthService {
       //   dispatch(email,password)
     } catch (error) {
       console.log("Login :", error);
+      throw error;
     }
   }
 
@@ -58,6 +62,7 @@ class AuthService {
       return await this.account.getSession("current");
     } catch (error) {
       console.log("SessionDetail :", error);
+      throw error;
     }
   }
 
@@ -74,6 +79,7 @@ class AuthService {
       return await this.account.get();
     } catch (error) {
       console.log("getCurrentUser :", error);
+      throw error;
     }
     return null;
   }
@@ -83,6 +89,7 @@ class AuthService {
       return await this.account.deleteSession(session);
     } catch (error) {
       console.log("Logout :", error);
+      throw error;
     }
   }
 }
