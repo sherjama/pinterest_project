@@ -7,7 +7,7 @@ import appwriteService from "../appwrite/config";
 
 const Home = () => {
   const [pins, setPins] = useState([]);
-  const status = useSelector((state) => state.authStatus.status);
+  const { status, userdata } = useSelector((state) => state.authStatus);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {

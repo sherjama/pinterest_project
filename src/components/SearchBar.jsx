@@ -1,15 +1,31 @@
 import { FaSearch } from "react-icons/fa";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const SearchBar = ({ className = "" }) => {
   // states
   const [focus, setFocus] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [result, setResult] = useState();
+  const redux_pins = useSelector((state) => state.pins.pins);
+
+  const [Pins, setPins] = useState(redux_pins);
 
   // functions
   const handleSearch = (e) => {
-    e.preventDefault();
-    console.log(searchTerm);
+    // Filter pins based on search searchTerm
+    const filtered = Pins.filter(
+      (pin) =>
+        pin.board.toLowerCase().includes(searchTerm) ||
+        pin.tag.some((tag) => tag.toLowerCase().includes(searchTerm)) ||
+        pin.title.toLowerCase().includes(searchTerm) ||
+        pin.description.toLowerCase().includes(searchTerm) ||
+        pin.author.toLowerCase().includes(searchTerm)
+    );
+
+    setResult(filtered);
+    // console.log(filtered);
+    // console.log(Pins);
   };
 
   const focusHandler = () => {
@@ -19,6 +35,12 @@ const SearchBar = ({ className = "" }) => {
       setFocus(false);
     }
   };
+
+  useEffect(() => {
+    setPins(Pins);
+    handleSearch();
+    // console.log(Pins);
+  }, [searchTerm, setSearchTerm, redux_pins]);
 
   return (
     <div className={`${className} h-12 `}>
@@ -36,7 +58,7 @@ const SearchBar = ({ className = "" }) => {
         <input
           type="text"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
           placeholder="Search"
           className="w-full h-full bg-transparent px-3 outline-none"
           onFocus={focusHandler}

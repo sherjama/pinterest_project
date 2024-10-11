@@ -92,12 +92,12 @@ const Header = ({ className = "" }) => {
                   isActive
                     ? "bg-black text-white p-3 hover:bg-black"
                     : "hover:bg-slate-300"
-                } p-3  rounded-full`
+                } ${!authstatus ? "hidden" : ""} p-3  rounded-full `
               }
             >
               <p className="font-Primary font-semibold text-sm">Home</p>
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to={"/explore"}
               className={({ isActive }) =>
                 `${
@@ -106,7 +106,7 @@ const Header = ({ className = "" }) => {
               }
             >
               <p className="font-Primary font-semibold text-sm">Explore</p>
-            </NavLink>
+            </NavLink> */}
             <NavLink
               to={"/creation-pin/create"}
               className={({ isActive }) =>
@@ -131,9 +131,12 @@ const Header = ({ className = "" }) => {
           )}
         </div>
 
-        <div className="flex items-center justify-end mr-3 min-w-[160px] h-full ">
+        <div className="flex items-center justify-end mr-3 min-w-[160px] sm:w-[30%] h-full ">
           {/* Account display picture  */}
-          <Dp className="size-10" />
+          <Dp
+            className="size-10"
+            onClick={() => navigate(`/profile/${userdata.$id}`)}
+          />
           {/* login & signup Button*/}
           <div className="flex items-center ">
             <div className="flex">
@@ -153,7 +156,9 @@ const Header = ({ className = "" }) => {
               {/* Logout Button  */}
               <Button
                 text="Log out"
-                className={`${authstatus ? " inline-block" : " hidden"}`}
+                className={`${
+                  authstatus ? " inline-block" : " hidden"
+                } max-sm:hidden`}
                 onClick={Logout}
               />
             </div>
@@ -163,12 +168,12 @@ const Header = ({ className = "" }) => {
 
       {/* navigations  */}
       <div
-        className={`w-full h-[80vh]  absolute top-[10%] flex justify-evenly items-center bg-white z-10 ${
+        className={`w-full h-[75vh]  fixed  p-8 top-[10%] flex justify-evenly items-start bg-white z-10 max-sm:flex-wrap ${
           toggle ? "" : "hidden"
         }`}
       >
         {/* Shortcuts */}
-        <div className="h-5/6 min-w-52  ">
+        <div className="h-min min-w-52  ">
           <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5">
             Shortcuts
           </h2>
@@ -179,12 +184,12 @@ const Header = ({ className = "" }) => {
             >
               Home feed
             </Link>
-            <Link
+            {/* <Link
               to={"/explore"}
               className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
             >
               Explore
-            </Link>
+            </Link> */}
             <Link
               to={"/blog"}
               className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
@@ -194,7 +199,7 @@ const Header = ({ className = "" }) => {
           </nav>
         </div>
         <span className="w-[2px] h-4/5 bg-slate-800"></span>
-        <div className="h-5/6 min-w-52 ">
+        <div className="h-min min-w-52 ">
           <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5">
             Create
           </h2>

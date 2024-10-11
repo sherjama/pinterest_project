@@ -17,6 +17,7 @@ import {
   LoginAndSignupPage,
   Error404Page,
   CreateUpdatePinPage,
+  PostPage,
 } from "./components/index.js";
 
 // router
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
         element: <ExplorePage />,
       },
       {
-        path: "/profile",
+        path: "/profile/:userId",
         element: <ProfilePage />,
       },
 
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "/creation-pin/:state",
         element: <CreateUpdatePinPage />,
+      },
+      {
+        path: "/pin/:postid",
+        element: <PostPage />,
       },
     ],
   },

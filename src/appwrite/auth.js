@@ -92,6 +92,16 @@ class AuthService {
       throw error;
     }
   }
+
+  async ClearSessions() {
+    try {
+      return await this.account.deleteSession();
+    } catch (error) {
+      console.log("ClearSessions :", error);
+
+      throw error;
+    }
+  }
 }
 
 const authservice = new AuthService();

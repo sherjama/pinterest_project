@@ -13,6 +13,7 @@ import BlogPage from "../pages/Blog";
 import LoginAndSignupPage from "../pages/LoginSignup";
 import Error404Page from "../pages/404";
 import CreateUpdatePinPage from "./CreateUpdatePin/CreateUpdatePin";
+import PostPage from "./Post";
 import Input from "./Input";
 import SearchBar from "./SearchBar";
 import Dp from "./Dp";
@@ -32,6 +33,7 @@ export {
   LoginAndSignupPage,
   Error404Page,
   CreateUpdatePinPage,
+  PostPage,
   Button,
   SearchBar,
   Dp,

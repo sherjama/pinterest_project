@@ -1,6 +1,7 @@
 // icon
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { ThreeCircles } from "react-loader-spinner";
+import { TbEdit } from "react-icons/tb";
 // react
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,15 +11,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Input, Button } from "../index";
 import appwriteService from "../../appwrite/config";
 import { AppwriteException } from "appwrite";
+import authservice from "../../appwrite/auth";
 
 const CreateUpdatePin = ({ pin }) => {
   //   states
+  const [isCreate, setIsCreate] = useState();
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [prevPin, setPrevpin] = useState(null);
   const [tags, setTags] = useState([]);
   const [inputTag, setInputTag] = useState("");
   const [fileError, setFileError] = useState("");
+  const [post, setPost] = useState();
 
   //   redux
   const dispatch = useDispatch();
@@ -26,12 +30,6 @@ const CreateUpdatePin = ({ pin }) => {
   const authSlice = useSelector((state) => state.authStatus);
 
   const { userdata, prefs } = authSlice;
-
-  // console.log(prefs.displayPicture);
-
-  // useEffect(() => {
-  //   console.log(userdata.$id);
-  // }, []);
 
   // react-router
   const { state } = useParams();
@@ -45,12 +43,32 @@ const CreateUpdatePin = ({ pin }) => {
   } = useForm();
 
   useEffect(() => {
+    if (state === "create") {
+      setIsCreate(true);
+    } else {
+      setIsCreate(false);
+    }
+
+    if (state.length > 8) {
+      getPostDetail();
+    }
     return () => {
       setLoading(false);
     };
-  }, []);
+  }, [state, isCreate]);
 
   //   function's
+  const getPostDetail = async () => {
+    const post = await appwriteService.GetPost(state.slice(7, state.length));
+    if (post) {
+      setPost(post);
+      const setImg = appwriteService.getFilePreview(post.image);
+      setImage ? setPrevpin(setImg) : null;
+    }
+
+    console.log(post);
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file ? file : null);
@@ -60,16 +78,17 @@ const CreateUpdatePin = ({ pin }) => {
   const handleTagChange = (event, byAddButton) => {
     const key = event.which || event.code;
     const char = String.fromCharCode(key);
+    // console.log("sdjflk", event.type, char);
 
-    if (!inputTag.length < 0) {
+    if (inputTag.length > 0) {
       if (char === " ") {
         inputTag.trim();
-        setTags([...tags, inputTag]);
+        inputTag === " " ? null : setTags([...tags, inputTag]);
         setInputTag("");
       }
       if (byAddButton) {
         inputTag.trim();
-        setTags([...tags, inputTag]);
+        inputTag === " " ? null : setTags([...tags, inputTag]);
         setInputTag("");
       }
     }
@@ -85,16 +104,16 @@ const CreateUpdatePin = ({ pin }) => {
 
     data.tag = tags;
 
-    if (pin) {
+    if (!isCreate) {
       const file = image ? await appwriteService.uploadFile(image) : null;
 
       if (file) {
-        appwriteService.deleteFile(pin.pinID);
+        appwriteService.deleteFile(post.image);
       }
-
-      const UpdatePin = await appwriteService.UpdatePost(pin.$id, {
+      data.image = file.$id;
+      data.status = true;
+      const UpdatePin = await appwriteService.UpdatePost(post.$id, {
         ...data,
-        pinID: file ? file.$id : undefined,
       });
 
       if (UpdatePin) {
@@ -118,7 +137,7 @@ const CreateUpdatePin = ({ pin }) => {
           });
 
           if (createPin) {
-            navigate("/home");
+            navigate(`/profile/${userdata.$id}`);
           }
         }
       }
@@ -134,12 +153,12 @@ const CreateUpdatePin = ({ pin }) => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
         <h1 className="text-3xl font-semibold mb-6 text-center">
-          Create a Pin
+          {isCreate ? "Create a Pin" : "Edit Pin"}
         </h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Image Upload */}
           <div className="flex flex-col items-center">
-            {image ? (
+            {image || post ? (
               <img
                 src={prevPin}
                 alt="Preview"
@@ -156,6 +175,22 @@ const CreateUpdatePin = ({ pin }) => {
                 <span className="text-gray-400">Click to upload an image</span>
               </label>
             )}
+            {post && (
+              <>
+                <label
+                  for="file-upload"
+                  class="py-2 px-3 rounded-3xl  font-medium text-md mx-1 bg-red-500 text-white"
+                >
+                  <TbEdit />
+                </label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </>
+            )}
             {fileError && (
               <p className="text-red-500 text-sm mt-1">{fileError}</p>
             )}
@@ -169,7 +204,7 @@ const CreateUpdatePin = ({ pin }) => {
               className={`mt-1 block w-full p-2 border ${
                 errors.title ? "border-red-500" : "border-gray-300"
               } rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
-              placeholder="Enter title"
+              placeholder={post ? post.title : "Enter title"}
               label=" Title"
               labelStyle="block text-sm font-medium text-gray-700"
             />
@@ -196,7 +231,7 @@ const CreateUpdatePin = ({ pin }) => {
               className={`mt-1 block w-full p-2 border ${
                 errors.description ? "border-red-500" : "border-gray-300"
               } rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
-              placeholder="Enter description"
+              placeholder={post ? post.description : "Enter description"}
               rows="3"
             />
             {errors.description && (
@@ -222,12 +257,44 @@ const CreateUpdatePin = ({ pin }) => {
               className={`mt-1 block w-full p-2 border ${
                 errors.board ? "border-red-500" : "border-gray-300"
               } rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
+              placeholder="jflsjlkajk"
             >
-              <option value="">-- Select Board --</option>
-              <option value="inspiration">Inspiration</option>
-              <option value="travel">Travel</option>
-              <option value="food">Food</option>
-              <option value="home-decor">Home Decor</option>
+              {post && (
+                <option value={post ? post.board : null}>{post.board}</option>
+              )}
+              {!post && <option value="">-- Select Board --</option>}
+              <option
+                className={`${
+                  post ? `${post.board == "inspiration" ? "hidden" : ""}` : null
+                }`}
+                value="inspiration"
+              >
+                Inspiration
+              </option>
+              <option
+                className={`${
+                  post ? `${post.board == "Travel" ? "hidden" : ""}` : null
+                }`}
+                value="travel"
+              >
+                Travel
+              </option>
+              <option
+                className={`${
+                  post ? `${post.board == "food" ? "hidden" : ""}` : null
+                }`}
+                value="food"
+              >
+                Food
+              </option>
+              <option
+                className={`${
+                  post ? `${post.board == "home-decor" ? "hidden" : ""}` : null
+                }`}
+                value="home-decor"
+              >
+                Home Decor
+              </option>
             </select>
             {errors.board && (
               <p className="text-red-500 text-sm mt-1">
@@ -249,7 +316,7 @@ const CreateUpdatePin = ({ pin }) => {
                 type="text"
                 id="tags"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Enter tags"
+                placeholder={post && !tags.length > 0 ? post.tag : "Enter tags"}
                 value={inputTag}
                 onChange={(e) => setInputTag(e.target.value)}
                 onKeyDown={handleTagChange}
@@ -281,7 +348,7 @@ const CreateUpdatePin = ({ pin }) => {
           <Button
             type="submit"
             className="m-auto relative"
-            text={`${loading ? "" : "Submit"}`}
+            text={`${loading ? "" : `${isCreate ? "submit" : "Edit"}`}`}
           >
             {loading && (
               <ThreeCircles

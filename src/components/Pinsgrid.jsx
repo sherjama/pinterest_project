@@ -1,12 +1,11 @@
 // src/components/PinGrid.jsx
 import React, { useState } from "react";
 import Pin from "./Pin";
-import { useSelector } from "react-redux";
+
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const PinsGrid = ({ pin }) => {
+const PinsGrid = ({ pin, userPins }) => {
   const pinsDisplayed = pin ? [...pin] : [];
-  // console.log(pinsDisplayed);
 
   const [visibleImages, setVisibleImages] = useState(
     pinsDisplayed.slice(0, 20)
@@ -27,7 +26,7 @@ const PinsGrid = ({ pin }) => {
         next={fetchMoreData}
         hasMore={visibleImages.length < pinsDisplayed.length}
         loader={<h4>Loading...</h4>}
-        className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 p-4"
+        className={` columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 p-4`}
       >
         {pinsDisplayed.map((pinInfo, index) => (
           <Pin key={pinInfo.$id} pinData={pinInfo} />
