@@ -123,6 +123,16 @@ const LoginSignup = () => {
               dispatch(setPref(pref));
               localStorage.setItem("prefs", JSON.stringify(pref));
             }
+          } else {
+            const prefs = await authservice.addPrefrencess({
+              displayPicture: "670926b1000cb03e26cc",
+            });
+
+            if (prefs) {
+              const pref = await authservice.getPrefrencess();
+              dispatch(setPref(pref));
+              localStorage.setItem("prefs", JSON.stringify(pref));
+            }
           }
 
           if (userdata) {

@@ -6,7 +6,7 @@ const Dp = ({ className = "", cusstomDp = "", ...prop }) => {
   const authSlice = useSelector((state) => state.authStatus);
 
   const { status, prefs } = authSlice;
-  const dp = prefs ? prefs.displayPicture : null;
+  const dp = prefs ? prefs.displayPicture : "670926b1000cb03e26cc";
   return (
     <div
       className={`${className} rounded-full  mr-2 bg-slate-900 ${

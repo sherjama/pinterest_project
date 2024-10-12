@@ -10,11 +10,14 @@ const Home = () => {
   const { status, userdata } = useSelector((state) => state.authStatus);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const Listposts = async () => {
+    await appwriteService.ListPosts().then((posts) => {
+      posts ? setPins(posts) : null;
+    });
+  };
   useEffect(() => {
     if (status) {
-      appwriteService.ListPosts().then((posts) => {
-        posts ? setPins(posts) : null;
-      });
+      Listposts();
     }
     if (pins) {
       dispatch(addPins(pins));
