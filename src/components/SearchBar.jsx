@@ -9,23 +9,24 @@ const SearchBar = ({ className = "" }) => {
   const [result, setResult] = useState();
   const redux_pins = useSelector((state) => state.pins.pins);
 
-  const [Pins, setPins] = useState(redux_pins);
-
   // functions
   const handleSearch = (e) => {
+    // e.preventDefault();
     // Filter pins based on search searchTerm
-    const filtered = Pins.filter(
-      (pin) =>
-        pin.board.toLowerCase().includes(searchTerm) ||
-        pin.tag.some((tag) => tag.toLowerCase().includes(searchTerm)) ||
-        pin.title.toLowerCase().includes(searchTerm) ||
-        pin.description.toLowerCase().includes(searchTerm) ||
-        pin.author.toLowerCase().includes(searchTerm)
-    );
+    if (redux_pins) {
+      const filtered = redux_pins.filter(
+        (pin) =>
+          pin.board.toLowerCase().includes(searchTerm) ||
+          pin.tag.some((tag) => tag.toLowerCase().includes(searchTerm)) ||
+          pin.title.toLowerCase().includes(searchTerm) ||
+          pin.description.toLowerCase().includes(searchTerm) ||
+          pin.author.toLowerCase().includes(searchTerm)
+      );
+      setResult(filtered);
+      console.log(filtered);
+    }
 
-    setResult(filtered);
-    // console.log(filtered);
-    // console.log(Pins);
+    // console.log(redux_pins);
   };
 
   const focusHandler = () => {
@@ -37,8 +38,8 @@ const SearchBar = ({ className = "" }) => {
   };
 
   useEffect(() => {
-    setPins(Pins);
-    handleSearch();
+    // setPins(Pins);
+    if (redux_pins) handleSearch();
     // console.log(Pins);
   }, [searchTerm, setSearchTerm, redux_pins]);
 
