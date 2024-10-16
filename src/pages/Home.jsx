@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { PinsGrid } from "../components";
+// index file
+import { PinsGrid } from "../components/index";
+// redux
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { addPins } from "../store/pinSlice";
+// appwrite
 import appwriteService from "../appwrite/config";
 
 const Home = () => {
+  // states
   const [pins, setPins] = useState([]);
-  const { status, userdata } = useSelector((state) => state.authStatus);
+
+  // redux
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { status } = useSelector((state) => state.authStatus);
+
+  const StoredPins = useSelector((state) => state.pins.pins);
+
+  const { isSearching, searchResult } = useSelector((state) => state.pins);
+
+  // functions
   const Listposts = async () => {
     await appwriteService.ListPosts().then((posts) => {
       posts ? setPins(posts) : null;
     });
   };
+
+  // useEffect's
   useEffect(() => {
     if (status) {
       Listposts();
@@ -22,9 +34,17 @@ const Home = () => {
     if (pins) {
       dispatch(addPins(pins));
     }
+    console.log(isSearching, "home");
   }, [pins, setPins]);
 
-  const StoredPins = useSelector((state) => state.pins.pins);
+  //  conditional Rendering :isSearching?
+  if (isSearching) {
+    return (
+      <div className=" w-full ">
+        <PinsGrid pin={searchResult} />
+      </div>
+    );
+  }
 
   return (
     <div className=" w-full ">

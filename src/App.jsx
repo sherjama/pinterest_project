@@ -1,15 +1,27 @@
+// react
 import React, { useEffect, useState } from "react";
+// index file
 import { Header, Footer } from "./components/index";
+// router-dom
 import { Outlet, useNavigate } from "react-router-dom";
+// redux
 import { useDispatch, useSelector } from "react-redux";
+import { addPins } from "./store/pinSlice";
+// appwrite
 import appwriteService from "./appwrite/config";
-import { addPins, deletePins } from "./store/pinSlice";
 
 const App = () => {
+  // states
   const [pins, setPins] = useState([]);
+
+  // redux
   const status = useSelector((state) => state.authStatus.status);
   const dispatch = useDispatch();
+
+  // router-dom
   const navigate = useNavigate();
+
+  // useEffect's
   useEffect(() => {
     if (status) {
       appwriteService.ListPosts().then((posts) => {
@@ -18,7 +30,10 @@ const App = () => {
     }
     if (pins) {
       dispatch(addPins(pins));
-      // navigate("/home");
+    }
+
+    if (!status) {
+      navigate("/auth/login");
     }
   }, [pins, setPins]);
 

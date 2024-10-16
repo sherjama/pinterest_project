@@ -1,6 +1,7 @@
 // icons
 import { FaSearch } from "react-icons/fa";
 import { TiThMenu } from "react-icons/ti";
+import { GiCancel } from "react-icons/gi";
 // react
 import React, { useEffect, useState } from "react";
 // index file
@@ -13,11 +14,11 @@ import { logout } from "../../store/authSlice";
 import { deletePins } from "../../store/pinSlice";
 // auth service
 import authservice from "../../appwrite/auth";
-import appwriteService from "../../appwrite/config";
 
 const Header = ({ className = "" }) => {
   // states
   const [toggle, setToggle] = useState(false);
+  const [searchTgl, setSearchTgl] = useState(false);
 
   // react-router-dom
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const Header = ({ className = "" }) => {
     // auth Logout
     authservice.Logout(sessionID.$id).then(dispatch(logout()));
 
-    navigate("/");
+    navigate("/auth/login");
 
     // Removing data of localSorage
     localStorage.removeItem("userdata");
@@ -50,14 +51,6 @@ const Header = ({ className = "" }) => {
     dispatch(deletePins());
   };
 
-  const menuHandler = () => {
-    if (!toggle) {
-      setToggle(true);
-    } else {
-      setToggle(false);
-    }
-  };
-
   // useEffect's
   useEffect(() => {
     setToggle(false);
@@ -66,15 +59,36 @@ const Header = ({ className = "" }) => {
   return (
     <>
       <div className={`${className} flex  justify-between items-center `}>
-        <div className="w-[85%] h-full flex items-center justify-between max-md:justify-start max-sm:w-[40%]  space-x-8 px-3 ">
+        {/* searchbar for mobiles  */}
+        {authstatus && searchTgl && (
+          <div className="w-full flex items-center justify-center space-x-2">
+            <SearchBar className="w-3/4" />
+            <span onClick={() => setSearchTgl(false)}>
+              <GiCancel size={26} color="gray" />
+            </span>
+          </div>
+        )}
+
+        <div
+          className={`w-[85%] h-full flex items-center justify-start max-[900px]:justify-between max-md:justify-start max-sm:w-[77%]  space-x-8 px-3 ${
+            searchTgl ? "hidden" : ""
+          }`}
+        >
           {/* Logo  */}
           <div
             className="flex items-center  justify-between hover:bg-gray-300  p-2 rounded-full"
-            onClick={menuHandler}
+            onClick={() => setToggle((prev) => !prev)}
           >
-            {<Logo />}
-            <span className="text-[#111111] text-lg font-normal pl-1 font-Secondary selection:text-[#111111]">
+            {<Logo className="max-[360px]:hidden" />}
+            <Dp
+              className="size-10 min-[360px]:hidden"
+              onClick={() => navigate(`/profile/${userdata.$id}`)}
+            />
+            <span className="text-[#111111] text-lg font-normal pl-1 font-Secondary selection:text-[#111111] max-[360px]:hidden">
               Pinterest
+            </span>
+            <span className="text-[#111111] text-lg font-normal pl-1 font-Secondary selection:text-[#111111] min-[360px]:hidden">
+              {userdata ? userdata.name : "Pinterest"}
             </span>
             {/* hamberger menu  */}
             <span className=" ml-2">
@@ -82,22 +96,22 @@ const Header = ({ className = "" }) => {
             </span>
           </div>
 
-          {/* navigation  */}
-
-          <div className="flex items-center  justify-between space-x-5 max-sm:hidden ">
-            <NavLink
-              to={"/home"}
-              className={({ isActive }) =>
-                `${
-                  isActive
-                    ? "bg-black text-white p-3 hover:bg-black"
-                    : "hover:bg-slate-300"
-                } ${!authstatus ? "hidden" : ""} p-3  rounded-full `
-              }
-            >
-              <p className="font-Primary font-semibold text-sm">Home</p>
-            </NavLink>
-            {/* <NavLink
+          {/* header navigation  */}
+          <div className="flex items-center justify-center max-[900px]:max-w-96  min-[900px]:min-w-[74%] min-[1000px]:min-w-[77%]">
+            <div className="flex items-center  justify-between space-x-5 max-[900px]:hidden ">
+              <NavLink
+                to={"/home"}
+                className={({ isActive }) =>
+                  `${
+                    isActive
+                      ? "bg-black text-white p-3 hover:bg-black"
+                      : "hover:bg-slate-300"
+                  } ${!authstatus ? "hidden" : ""} p-3  rounded-full `
+                }
+              >
+                <p className="font-Primary font-semibold text-sm">Home</p>
+              </NavLink>
+              {/* <NavLink
               to={"/explore"}
               className={({ isActive }) =>
                 `${
@@ -107,36 +121,68 @@ const Header = ({ className = "" }) => {
             >
               <p className="font-Primary font-semibold text-sm">Explore</p>
             </NavLink> */}
-            <NavLink
-              to={"/creation-pin/create"}
-              className={({ isActive }) =>
-                `${
-                  isActive ? "bg-black text-white p-3 rounded-full" : ""
-                } p-3 ${!authstatus ? "hidden" : ""}`
-              }
-            >
-              <p className="font-Primary font-semibold text-sm">Create</p>
-            </NavLink>
+              <NavLink
+                to={"/creation-pin/create"}
+                className={({ isActive }) =>
+                  `${
+                    isActive ? "bg-black text-white p-3 rounded-full" : ""
+                  } p-3 ${!authstatus ? "hidden" : ""}`
+                }
+              >
+                <p className="font-Primary font-semibold text-sm">Create</p>
+              </NavLink>
+              <NavLink
+                to={"/blog"}
+                className={({ isActive }) =>
+                  `${
+                    isActive ? "bg-black text-white p-3 rounded-full" : ""
+                  } p-3 max-[1080px]:hidden`
+                }
+              >
+                <p className="font-Primary font-semibold text-sm">Blog</p>
+              </NavLink>
+              <NavLink
+                to={"/contact-us"}
+                className={({ isActive }) =>
+                  `${
+                    isActive ? "bg-black text-white p-3 rounded-full" : ""
+                  } p-3 `
+                }
+              >
+                <p className="font-Primary font-semibold text-sm">Contact</p>
+              </NavLink>
+            </div>
+
+            {/* searchbar  */}
+
+            {authstatus && !searchTgl && (
+              <>
+                <SearchBar className="max-[900px]:min-w-full max-sm:hidden ml-4 w-full" />{" "}
+              </>
+            )}
           </div>
-
-          {/* searchbar  */}
-
-          {authstatus && (
-            <>
-              <SearchBar className="max-md:hidden md:w-[50%]" />{" "}
-              <span className="md:hidden relative right-5">
-                <FaSearch size={20} />
-              </span>
-            </>
-          )}
         </div>
 
-        <div className="flex items-center justify-end mr-3 min-w-[160px] sm:w-[30%] h-full ">
-          {/* Account display picture  */}
+        {/* Account display picture  */}
+        <div
+          className={`flex items-center justify-end mr-3 min-w-[160px] sm:min-w-max h-full max-sm:min-w-max ${
+            searchTgl ? "hidden" : ""
+          }`}
+        >
+          {authstatus && (
+            <span
+              className="sm:hidden relative  rounded-full p-2 bg-gray-300 mr-2"
+              // onClick={() => setSearchTgl(true)}
+              onClick={() => setSearchTgl((prev) => !prev)}
+            >
+              <FaSearch size={20} />
+            </span>
+          )}
           <Dp
-            className="size-10"
+            className="size-10 max-[360px]:hidden"
             onClick={() => navigate(`/profile/${userdata.$id}`)}
           />
+
           {/* login & signup Button*/}
           <div className="flex items-center ">
             <div className="flex">
@@ -158,7 +204,7 @@ const Header = ({ className = "" }) => {
                 text="Log out"
                 className={`${
                   authstatus ? " inline-block" : " hidden"
-                } max-sm:hidden`}
+                }  max-sm:text-xs`}
                 onClick={Logout}
               />
             </div>
@@ -168,13 +214,13 @@ const Header = ({ className = "" }) => {
 
       {/* navigations  */}
       <div
-        className={`w-full h-[75vh]  fixed  p-8 top-[10%] flex justify-evenly items-start bg-white z-10 max-sm:flex-wrap ${
+        className={`w-full h-[75vh]  fixed  p-8 top-[10%] flex justify-evenly items-start bg-white z-10 max-sm:flex-wrap max-sm:min-h-max ${
           toggle ? "" : "hidden"
         }`}
       >
         {/* Shortcuts */}
         <div className="h-min min-w-52  ">
-          <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5">
+          <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5 max-sm:pb-0">
             Shortcuts
           </h2>
           <nav className="min-w-20 min-h-32 pl-5 flex flex-col space-y-2 ">
@@ -184,23 +230,23 @@ const Header = ({ className = "" }) => {
             >
               Home feed
             </Link>
-            {/* <Link
-              to={"/explore"}
-              className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
-            >
-              Explore
-            </Link> */}
             <Link
               to={"/blog"}
               className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
             >
               Blog
             </Link>
+            <Link
+              to={"/contact-us"}
+              className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
+            >
+              Contact Us
+            </Link>
           </nav>
         </div>
-        <span className="w-[2px] h-4/5 bg-slate-800"></span>
+        <span className="w-[2px] h-4/5 bg-slate-800 max-sm:hidden"></span>
         <div className="h-min min-w-52 ">
-          <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5">
+          <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5 max-sm:pb-0">
             Create
           </h2>
           <nav className="min-w-20 min-h-32 pl-5 flex flex-col space-y-2 ">

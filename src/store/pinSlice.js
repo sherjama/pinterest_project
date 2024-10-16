@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   totalpins: 0,
   pins: [],
+  searchResult: [],
+  isSearching: false,
 };
 
 const pinSlice = createSlice({
@@ -17,9 +19,18 @@ const pinSlice = createSlice({
       state.totalpins = 0;
       state.pins = [];
     },
+    addSearchPins: (state, action) => {
+      state.searchResult = action.payload;
+      state.isSearching = true;
+    },
+    deleteSearchPins: (state, action) => {
+      state.searchResult = 0;
+      state.isSearching = false;
+    },
   },
 });
 
-export const { addPins, deletePins } = pinSlice.actions;
+export const { addPins, deletePins, addSearchPins, deleteSearchPins } =
+  pinSlice.actions;
 
 export default pinSlice.reducer;

@@ -5,16 +5,15 @@ import { TbEdit } from "react-icons/tb";
 // react
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 // index file
 import { Input, Button } from "../index";
 import appwriteService from "../../appwrite/config";
-import { AppwriteException } from "appwrite";
-import authservice from "../../appwrite/auth";
 
 const CreateUpdatePin = ({ pin }) => {
   //   states
+  const [error, setError] = useState("");
   const [isCreate, setIsCreate] = useState();
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
@@ -25,8 +24,6 @@ const CreateUpdatePin = ({ pin }) => {
   const [post, setPost] = useState();
 
   //   redux
-  const dispatch = useDispatch();
-
   const authSlice = useSelector((state) => state.authStatus);
 
   const { userdata, prefs } = authSlice;
@@ -59,14 +56,16 @@ const CreateUpdatePin = ({ pin }) => {
 
   //   function's
   const getPostDetail = async () => {
-    const post = await appwriteService.GetPost(state.slice(7, state.length));
-    if (post) {
-      setPost(post);
-      const setImg = appwriteService.getFilePreview(post.image);
-      setImage ? setPrevpin(setImg) : null;
+    try {
+      const post = await appwriteService.GetPost(state.slice(7, state.length));
+      if (post) {
+        setPost(post);
+        const setImg = appwriteService.getFilePreview(post.image);
+        setImage ? setPrevpin(setImg) : null;
+      }
+    } catch (e) {
+      setError(e.message);
     }
-
-    console.log(post);
   };
 
   const handleImageChange = (e) => {
@@ -105,41 +104,51 @@ const CreateUpdatePin = ({ pin }) => {
     data.tag = tags;
 
     if (!isCreate) {
-      const file = image ? await appwriteService.uploadFile(image) : null;
+      try {
+        const file = image ? await appwriteService.uploadFile(image) : null;
 
-      if (file) {
-        appwriteService.deleteFile(post.image);
-      }
-      data.image = file.$id;
-      data.status = true;
-      const UpdatePin = await appwriteService.UpdatePost(post.$id, {
-        ...data,
-      });
+        if (file) {
+          appwriteService.deleteFile(post.image);
+        }
+        data.image = file.$id;
+        data.status = true;
+        const UpdatePin = await appwriteService.UpdatePost(post.$id, {
+          ...data,
+        });
 
-      if (UpdatePin) {
-        navigate("/home");
+        if (UpdatePin) {
+          navigate("/home");
+        }
+      } catch (e) {
+        setError(e.message);
+        setLoading(false);
       }
     } else {
-      const file = image ? await appwriteService.uploadFile(image) : null;
+      try {
+        const file = image ? await appwriteService.uploadFile(image) : null;
 
-      if (file === null) {
-        setFileError("image is required");
-        setLoading(false);
-      } else {
-        if (file) {
-          data.image = file.$id;
-          data.status = true;
-          const createPin = await appwriteService.CreatePost({
-            ...data,
-            userId: userdata.$id,
-            auther: userdata.name,
-            autherDp: prefs.displayPicture,
-          });
+        if (file === null) {
+          setFileError("image is required");
+          setLoading(false);
+        } else {
+          if (file) {
+            data.image = file.$id;
+            data.status = true;
+            const createPin = await appwriteService.CreatePost({
+              ...data,
+              userId: userdata.$id,
+              auther: userdata.name,
+              autherDp: prefs.displayPicture,
+            });
 
-          if (createPin) {
-            navigate(`/profile/${userdata.$id}`);
+            if (createPin) {
+              navigate(`/profile/${userdata.$id}`);
+            }
           }
         }
+      } catch (e) {
+        setError(e.message);
+        setLoading(false);
       }
     }
 
@@ -153,6 +162,12 @@ const CreateUpdatePin = ({ pin }) => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
         <h1 className="text-3xl font-semibold mb-6 text-center">
+          {error && (
+            <div class="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
+
           {isCreate ? "Create a Pin" : "Edit Pin"}
         </h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

@@ -3,7 +3,7 @@ import Footer from "./Footer/Footer";
 import Pin from "./Pin";
 import PinsGrid from "./Pinsgrid";
 import Logo from "./Logo";
-import ExplorePage from "../pages/Explore";
+import ContactUsPage from "../pages/ContactUs";
 import ProfilePage from "../pages/Profile";
 import Login from "./Header/Login";
 import Button from "./Button";
@@ -25,7 +25,7 @@ export {
   Pin,
   PinsGrid,
   Logo,
-  ExplorePage,
+  ContactUsPage,
   ProfilePage,
   HomePage,
   AboutPage,

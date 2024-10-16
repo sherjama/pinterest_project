@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import appwriteService from "../appwrite/config";
@@ -7,19 +7,7 @@ import { Dp } from "./index";
 import { useNavigate } from "react-router-dom";
 
 const Pin = ({ pinData }) => {
-  // console.log(pinData);
   const navigate = useNavigate();
-  const [hoverd, setHoverd] = useState(false);
-
-  // const handleDownload = () => {
-  //   // Create a temporary link element
-  //   const link = document.createElement('a');
-  //   link.href = imageUrl;
-  //   link.download = imageName || 'downloaded_image'; // You can set the image name here
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link); // Clean up the DOM
-  // };
 
   return (
     <div
@@ -37,13 +25,6 @@ const Pin = ({ pinData }) => {
         effect="blur" // You can also use "opacity" or other effects
         className="rounded-xl hover:border-2 border-blue-400"
       />
-      {/* <h1
-        className={`${
-          hoverd ? "" : "hidden"
-        } relative z-20 top-[-3.8rem] left-[32%] text-slate-50 bg-red-600 p-3 rounded-3xl`}
-      >
-        save
-      </h1> */}
       <div
         className={`ml-2 mt-1 size w-full min-h-16 font-Secondary `}
         id={pinData.$id}
@@ -56,10 +37,8 @@ const Pin = ({ pinData }) => {
           <span className="text-sm underline">{pinData.auther}</span>
         </div>
       </div>
-      {/* <h1 className={`${hoverd ? null : "hidden"}`}>hello</h1> */}
     </div>
   );
 };
 
 export default Pin;
-//

@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import { Provider } from "react-redux";
 
@@ -9,7 +10,7 @@ import store from "./store/store.js";
 
 // pages
 import {
-  ExplorePage,
+  ContactUsPage,
   ProfilePage,
   AboutPage,
   BlogPage,
@@ -31,8 +32,8 @@ const router = createBrowserRouter([
         element: <LoginAndSignupPage />,
       },
       {
-        path: "/explore",
-        element: <ExplorePage />,
+        path: "/contact-us",
+        element: <ContactUsPage />,
       },
       {
         path: "/profile/:userId",

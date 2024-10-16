@@ -1,32 +1,45 @@
+// icons
 import { FaSearch } from "react-icons/fa";
+// react
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+// redux
+import { useSelector, useDispatch } from "react-redux";
+import { addSearchPins, deleteSearchPins } from "../store/pinSlice";
+// appwrite
+import appwriteService from "../appwrite/config";
 
 const SearchBar = ({ className = "" }) => {
   // states
+  const [Pins, setPins] = useState([]);
   const [focus, setFocus] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [result, setResult] = useState();
+  const [result, setResult] = useState("");
+  const [NotFound, setNotFound] = useState(false);
   const redux_pins = useSelector((state) => state.pins.pins);
 
+  // redux
+  const dispatch = useDispatch();
+
   // functions
-  const handleSearch = (e) => {
-    // e.preventDefault();
-    // Filter pins based on search searchTerm
-    if (redux_pins) {
-      const filtered = redux_pins.filter(
+  const Listposts = async () => {
+    await appwriteService.ListPosts().then((posts) => {
+      posts ? setPins(posts.documents) : null;
+    });
+  };
+
+  const handleSearch = () => {
+    if (Pins) {
+      const filtered = Pins.filter(
         (pin) =>
-          pin.board.toLowerCase().includes(searchTerm) ||
-          pin.tag.some((tag) => tag.toLowerCase().includes(searchTerm)) ||
           pin.title.toLowerCase().includes(searchTerm) ||
           pin.description.toLowerCase().includes(searchTerm) ||
-          pin.author.toLowerCase().includes(searchTerm)
+          pin.auther.toLowerCase().includes(searchTerm) ||
+          pin.board.toLowerCase().includes(searchTerm) ||
+          pin.tag.some((tag) => tag.toLowerCase().includes(searchTerm))
       );
-      setResult(filtered);
-      console.log(filtered);
-    }
 
-    // console.log(redux_pins);
+      setResult(filtered);
+    }
   };
 
   const focusHandler = () => {
@@ -37,11 +50,27 @@ const SearchBar = ({ className = "" }) => {
     }
   };
 
+  // useEffect's
   useEffect(() => {
-    // setPins(Pins);
-    if (redux_pins) handleSearch();
-    // console.log(Pins);
-  }, [searchTerm, setSearchTerm, redux_pins]);
+    Listposts();
+    handleSearch();
+  }, [redux_pins, searchTerm]);
+
+  useEffect(() => {
+    if (searchTerm.length > 0) {
+      if (result.length <= 0) {
+        setNotFound(true);
+      }
+
+      if (result.length > 0) {
+        setNotFound(false);
+        dispatch(addSearchPins(result));
+      }
+    } else {
+      setNotFound(false);
+      dispatch(deleteSearchPins());
+    }
+  }, [searchTerm, result]);
 
   return (
     <div className={`${className} h-12 `}>
@@ -65,6 +94,9 @@ const SearchBar = ({ className = "" }) => {
           onFocus={focusHandler}
           onBlur={focusHandler}
         />
+        {NotFound && (
+          <p className="text-xs font-Secondary text-red-500">Not Found</p>
+        )}
       </form>
     </div>
   );

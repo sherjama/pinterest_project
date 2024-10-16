@@ -1,7 +1,5 @@
 // icons
 import { FaCamera } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
 //loader
 import { ThreeCircles } from "react-loader-spinner";
 // react
@@ -14,12 +12,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Logo, Input } from "../components/index";
 // authService
 import authservice from "../appwrite/auth";
-// import { OAuthProvider } from "appwrite";
 import appwriteService from "../appwrite/config";
 
 // react-redux redux-toolkit
 import { login, session as authSassion, setPref } from "../store/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const LoginSignup = () => {
   // react-router-dom
@@ -60,7 +57,7 @@ const LoginSignup = () => {
     setPrevImage(file ? URL.createObjectURL(file) : null);
   };
 
-  const onSubmit = async ({ email, password, name, profilePicture }) => {
+  const onSubmit = async ({ email, password, name }) => {
     !toggle ? setToggle(true) : setToggle(false);
     setGlobelError("");
     // LoginPage
@@ -335,14 +332,12 @@ const LoginSignup = () => {
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
             Don’t have an account?{" "}
-            <Link to={"/auth/signup"} className="text-red-500 hover:underline">
-              Sign up
+            <Link
+              to={isLogin ? "/auth/signup" : "/auth/login"}
+              className="text-red-500 hover:underline"
+            >
+              {isLogin ? "Sign Up" : "Sign In"}
             </Link>
-          </p>
-          <p className="text-sm text-gray-600">
-            <a href="#" className="text-red-500 hover:underline">
-              Forgot your password?
-            </a>
           </p>
         </div>
       </div>

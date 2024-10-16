@@ -1,21 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { TbEdit } from "react-icons/tb";
+// icons
 import { MdDelete } from "react-icons/md";
+import { TbEdit } from "react-icons/tb";
+// react
+import React, { useEffect, useState } from "react";
+// index file
 import { Button } from "../components/index";
+// lazy load image
 import { LazyLoadImage } from "react-lazy-load-image-component";
+// appwrite
 import appwriteService from "../appwrite/config";
+// react-router-dom
 import { useNavigate, useParams } from "react-router-dom";
+// redux
 import { useSelector } from "react-redux";
-import { isAction } from "@reduxjs/toolkit";
 
 const Post = () => {
-  const logedinUser = useSelector((state) => state.authStatus.userdata);
-  const navigate = useNavigate();
+  // states
   const [post, setPost] = useState({});
   const [autherDP, setAutherDP] = useState();
   const [istAuther, setIstAuther] = useState();
   const [postImg, setPostImg] = useState();
   const { postid } = useParams();
+
+  // redux
+  const logedinUser = useSelector((state) => state.authStatus.userdata);
+
+  // router-dom
+  const navigate = useNavigate();
+
+  // useEffect's
 
   useEffect(() => {
     postid
@@ -38,7 +51,7 @@ const Post = () => {
     console.log(istAuther);
   }, [post, setPost]);
 
-  // console.log(post);
+  // functions
   const deletePost = async () => {
     try {
       await appwriteService
@@ -130,29 +143,3 @@ const Post = () => {
 };
 
 export default Post;
-
-// coments ui
-{
-  /* <div className="mt-6">
-              <p className="text-gray-800">No comments yet</p>
-              <p className="text-gray-500">
-                No comments yet! Add one to start the conversation.
-              </p>
-            </div>
-            <div className="mt-4 flex items-center">
-              <img
-                src="https://placehold.co/40"
-                alt="Profile picture of the commenter"
-                className="w-10 h-10 rounded-full"
-              />
-              <input
-                type="text"
-                placeholder="Add a comment"
-                className="ml-2 flex-1 border border-gray-300 rounded-full px-4 py-2"
-              />
-              <i className="fas fa-smile ml-2 text-gray-500"></i>
-            </div> */
-}
-{
-  /* <div className="flex items-center justify-start mt-28"></div> */
-}
