@@ -104,11 +104,13 @@ const App = () => {
   return (
     <>
       <div className="w-full h-screen ">
-        <LoadingBar
-          color="#f11946"
-          progress={progress}
-          onLoaderFinished={() => setProgress(0)}
-        />
+        {status && (
+          <LoadingBar
+            color="#f11946"
+            progress={progress}
+            onLoaderFinished={() => setProgress(0)}
+          />
+        )}
         <Header className="w-full h-[12%] z-50 fixed top-0 bg-white" />
         <div className="w-full h-[12%]"></div>
         <main className="w-full min-h-min ">
