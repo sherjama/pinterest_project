@@ -1,3 +1,4 @@
+// react
 import React, { useEffect, useState } from "react";
 // index file
 import { PinsGrid } from "../components/index";
@@ -14,9 +15,7 @@ const Home = () => {
   // redux
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.authStatus);
-
   const StoredPins = useSelector((state) => state.pins.pins);
-
   const { isSearching, searchResult } = useSelector((state) => state.pins);
 
   // functions
@@ -34,7 +33,6 @@ const Home = () => {
     if (pins) {
       dispatch(addPins(pins));
     }
-    console.log(isSearching, "home");
   }, [pins, setPins]);
 
   //  conditional Rendering :isSearching?

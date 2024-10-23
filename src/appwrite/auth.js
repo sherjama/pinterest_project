@@ -31,7 +31,17 @@ class AuthService {
 
   async addPrefrencess(data) {
     try {
-      return await this.account.updatePrefs(data);
+      const prevPrefs = await this.account.getPrefs();
+
+      if (prevPrefs) {
+        const prefrences = {
+          ...data,
+          ...prevPrefs,
+        };
+        return await this.account.updatePrefs(prefrences);
+      } else {
+        return await this.account.updatePrefs(data);
+      }
     } catch (error) {
       console.log("Addprefrencess :", error);
       throw error;

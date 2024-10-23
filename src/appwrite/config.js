@@ -139,6 +139,50 @@ class Service {
   getFilePreview(fileId) {
     return this.bucket.getFilePreview(conf.appwriteBucketId, fileId);
   }
+
+  // for saved posts
+  async addSavePost({ userId, pinId }) {
+    try {
+      return await this.databases.createDocument(
+        conf.appwriteDatabaseId,
+        conf.appwriteSavedCollection,
+        ID.unique(),
+        {
+          userId,
+          pinId,
+        }
+      );
+    } catch (error) {
+      console.log("addSavePost :", error);
+      throw error;
+    }
+  }
+
+  async ListSavePosts(userId) {
+    try {
+      return await this.databases.listDocuments(
+        conf.appwriteDatabaseId,
+        conf.appwriteSavedCollection,
+        [Query.equal("userId", userId)]
+      );
+    } catch (error) {
+      console.log("ListSavePosts :", error);
+      throw error;
+    }
+  }
+
+  async DeleteSavedPost(postId) {
+    try {
+      return await this.databases.deleteDocument(
+        conf.appwriteDatabaseId,
+        conf.appwriteSavedCollection,
+        postId
+      );
+    } catch (error) {
+      console.log("DeleteSavedPost :", error);
+      throw error;
+    }
+  }
 }
 
 const service = new Service();

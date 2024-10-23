@@ -1,10 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const initialState = {
   totalpins: 0,
   pins: [],
   searchResult: [],
   isSearching: false,
+  savedPins: [],
+  savedPinsDATA: [],
 };
 
 const pinSlice = createSlice({
@@ -27,10 +29,22 @@ const pinSlice = createSlice({
       state.searchResult = 0;
       state.isSearching = false;
     },
+    saved: (state, action) => {
+      state.savedPins = action.payload.documents;
+    },
+    displaySaved: (state, action) => {
+      state.savedPinsDATA = action.payload;
+    },
   },
 });
 
-export const { addPins, deletePins, addSearchPins, deleteSearchPins } =
-  pinSlice.actions;
+export const {
+  addPins,
+  deletePins,
+  addSearchPins,
+  deleteSearchPins,
+  saved,
+  displaySaved,
+} = pinSlice.actions;
 
 export default pinSlice.reducer;

@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 // redux
 import { useSelector, useDispatch } from "react-redux";
-import { addSearchPins, deleteSearchPins } from "../store/pinSlice";
+import { addSearchPins } from "../store/pinSlice";
 // appwrite
 import appwriteService from "../appwrite/config";
 
@@ -68,7 +68,7 @@ const SearchBar = ({ className = "" }) => {
       }
     } else {
       setNotFound(false);
-      dispatch(deleteSearchPins());
+      // dispatch(deleteSearchPins());
     }
   }, [searchTerm, result]);
 
