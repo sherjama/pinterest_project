@@ -54,16 +54,10 @@ const ContactUs = () => {
           <div>
             <p>+91 8769214377</p>
             <p>sherjama8769214377@gmail.com</p>
-            <p>Whatsapp</p>
           </div>
           <div>
             <p>Banswara 327001</p>
             <p>Rajasthan, India</p>
-            <p>
-              <a href="#" className="underline">
-                See in Google maps
-              </a>
-            </p>
           </div>
         </div>
         <div className="mt-10 flex space-x-4">

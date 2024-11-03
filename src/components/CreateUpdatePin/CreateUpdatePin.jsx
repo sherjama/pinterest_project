@@ -99,7 +99,6 @@ const CreateUpdatePin = ({ pin }) => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log("Form Data: ", { ...data, image, tags });
 
     data.tag = tags;
 
@@ -109,8 +108,10 @@ const CreateUpdatePin = ({ pin }) => {
 
         if (file) {
           appwriteService.deleteFile(post.image);
+          data.image = file.$id;
+        } else {
+          data.image = post.image;
         }
-        data.image = file.$id;
         data.status = true;
         const UpdatePin = await appwriteService.UpdatePost(post.$id, {
           ...data,
@@ -151,6 +152,7 @@ const CreateUpdatePin = ({ pin }) => {
         setLoading(false);
       }
     }
+    console.log("Form Data: ", { ...data, image });
 
     // Reset form after submission
     reset();
@@ -163,7 +165,7 @@ const CreateUpdatePin = ({ pin }) => {
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
         <h1 className="text-3xl font-semibold mb-6 text-center">
           {error && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               {error}
             </div>
           )}
@@ -193,8 +195,8 @@ const CreateUpdatePin = ({ pin }) => {
             {post && (
               <>
                 <label
-                  for="file-upload"
-                  class="py-2 px-3 rounded-3xl  font-medium text-md mx-1 bg-red-500 text-white"
+                  htmlFor="file-upload"
+                  className="py-2 px-3 rounded-3xl  font-medium text-md mx-1 bg-red-500 text-white"
                 >
                   <TbEdit />
                 </label>
@@ -262,7 +264,7 @@ const CreateUpdatePin = ({ pin }) => {
               htmlFor="board"
               className="block text-sm font-medium text-gray-700"
             >
-              Select Board
+              Select Board &#40;optional&#41;
             </label>
             <select
               id="board"
@@ -275,9 +277,12 @@ const CreateUpdatePin = ({ pin }) => {
               placeholder="jflsjlkajk"
             >
               {post && (
-                <option value={post ? post.board : null}>{post.board}</option>
+                <>
+                  <option value={post ? post.board : null}>{post.board}</option>
+                  <option value="none">none</option>
+                </>
               )}
-              {!post && <option value="">-- Select Board --</option>}
+              {!post && <option value="none">-- Select Board --</option>}
               <option
                 className={`${
                   post ? `${post.board == "inspiration" ? "hidden" : ""}` : null

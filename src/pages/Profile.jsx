@@ -82,7 +82,6 @@ const Profile = () => {
     } else {
       setToggle(true);
     }
-    console.log(toggle);
   };
 
   // useEffect's

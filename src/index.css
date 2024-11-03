@@ -14,6 +14,11 @@ body {
 
 }
 
+*::selection {
+    background-color: black;
+    color: white;
+}
+
 @font-face {
     font-family: "Sora";
     src: url("/fonts/Sora-VariableFont_wght.ttf");
@@ -22,4 +27,10 @@ body {
 @font-face {
     font-family: "OpenSans";
     src: url(/fonts/OpenSans-VariableFont_wdth\,wght.ttf);
+}
+
+@layer base {
+    :root {
+        --radius: 0.5rem;
+    }
 }

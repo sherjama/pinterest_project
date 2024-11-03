@@ -186,7 +186,7 @@ const LoginSignup = () => {
 
   return (
     <div className="min-h-[90vh] w-full flex justify-center items-center ">
-      <div className="bg-white shadow-md rounded-[4rem] p-8 w-full max-w-md min-h-96 border-2 border-solid border-gray-100">
+      <div className="bg-white shadow-md rounded-[4rem] p-8 w-full max-w-md min-h-96 border-2 border-solid border-gray-100  max-[520px]:w-[85%]">
         <div className="flex flex-col items-center justify-center">
           <div>
             {isLogin && (
@@ -331,7 +331,9 @@ const LoginSignup = () => {
         {/* Additional links */}
         <div className="text-center mt-4">
           <p className="text-sm text-gray-600">
-            Don’t have an account?{" "}
+            {isLogin
+              ? "Don't have an account?  "
+              : "Already have an account?  "}
             <Link
               to={isLogin ? "/auth/signup" : "/auth/login"}
               className="text-red-500 hover:underline"

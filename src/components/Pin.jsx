@@ -41,9 +41,7 @@ const Pin = ({ pinData }) => {
           className={`ml-2 mt-1 size w-full min-h-16 font-Secondary `}
           id={pinData.$id}
         >
-          <p className="font-medium text-sm text-[#323232]">
-            {pinData.description}
-          </p>
+          <p className="font-medium text-sm text-[#323232]">{pinData.title}</p>
           <div className="mt-1 flex items-center justify-start text-[#B4B4B4]">
             <Dp className="size-8" cusstomDp={pinData.autherDp} />
             <span className="text-sm underline">{pinData.auther}</span>

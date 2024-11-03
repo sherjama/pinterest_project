@@ -1,7 +1,20 @@
 // icons
+import { ThreeCircles } from "react-loader-spinner";
 import { TiTickOutline } from "react-icons/ti";
 import { MdDelete } from "react-icons/md";
 import { TbEdit } from "react-icons/tb";
+import { BsThreeDotsVertical } from "react-icons/bs";
+// shadcn
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 // react
 import React, { useEffect, useState } from "react";
 // index file
@@ -19,6 +32,7 @@ import { setLoading } from "../store/loadSlice";
 const Post = () => {
   // states
   const [isloading, setIsLoading] = useState(true);
+  const [onSaveLoading, setOnSaveLoading] = useState();
   const [post, setPost] = useState({});
   const [autherDP, setAutherDP] = useState();
   const [istAuther, setIstAuther] = useState();
@@ -92,6 +106,8 @@ const Post = () => {
   };
 
   const savePost = async () => {
+    console.log("lkjslk");
+
     // desigined DATA
     const data = {
       userId: logedinUser.$id,
@@ -102,7 +118,13 @@ const Post = () => {
     if (!isSaved) {
       if (data) {
         // savepost
-        await appwriteService.addSavePost(data);
+        try {
+          setOnSaveLoading(true);
+          const res = await appwriteService.addSavePost(data);
+          res ? setOnSaveLoading(false) : setOnSaveLoading(true);
+        } catch (error) {
+          console.log("savePost :", error);
+        }
       }
     } else if (isSaved) {
       // unsave post
@@ -124,91 +146,159 @@ const Post = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen ">
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden w-3/4 min-w-96 min-h-[75vh] mt-[2vw] ">
-        <div className="flex h-full flex-wrap items-center justify-evenly ">
+      <div className="rounded-xl shadow-lg overflow-hidden w-3/4 max-w-[52rem] max-sm:w-[98%]  min-h-[75vh] mt-[2vw] p-2 ">
+        {/* DELETE and UPDATE btn  */}
+        <div className="cursor-pointer px-2 pt-4">
+          {istAuther && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button>
+                  <BsThreeDotsVertical size={35} color="gray" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>{post.title}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={() => navigate(`/creation-pin/update-${post.$id}`)}
+                  >
+                    {/* Edit and Delete btn  */}
+                    <span>Update</span>
+
+                    <DropdownMenuShortcut>
+                      <Button
+                        text={<TbEdit color="blue" size={35} />}
+                        className="bg-gray-400 rounded-full rounded-bl-sm font-Primary"
+                        bgColor="bg-transparnt"
+                      />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={deletePost}>
+                    <span>Delete</span>
+
+                    <DropdownMenuShortcut>
+                      <Button
+                        text={<MdDelete color="red" size={35} />}
+                        className="bg-gray-400 rounded-full rounded-bl-sm font-Primary"
+                        bgColor="bg-transparnt"
+                      />
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+        {/* container  */}
+        <div className="flex h-full flex-wrap  justify-center w-full">
           {/* image  */}
-          <div className="max-h-full  mt-[1vw] ">
+          <div>
             <LazyLoadImage
               onLoad={() => setIsLoading(false)}
               id={post.$id}
               src={appwriteService.getFilePreview(postImg ? postImg : null)}
               alt={`Image ${post.$id}`}
               effect="blur"
-              className="w-full size-96 object-contain rounded-3xl"
+              className="w-full min-[385px]: object-contain rounded-3xl"
             />
           </div>
           {/* post details  */}
           {!isloading && (
-            <div className="p-6  w-96  flex flex-col min-h-96 ">
-              {istAuther && (
-                <div className="flex space-x-3 justify-end">
-                  <Button
-                    text={<TbEdit />}
-                    className="bg-gray-400 text-white px-4 py-2 rounded-full float-end font-Primary"
-                    bgColor="bg-gray-500"
-                    onClick={() => navigate(`/creation-pin/update-${post.$id}`)}
-                  />
-                  <Button
-                    text={<MdDelete />}
-                    className="bg-gray-400 text-white px-4 py-2 rounded-full float-end font-Primary"
-                    onClick={deletePost}
-                  />
+            <div className="w-full  flex items-center justify-start">
+              <div className="sm:p-6 w-full   flex flex-col min-h-96  sm:ml-5">
+                {/* description and title  */}
+                <div>
+                  <h1 className="text-3xl font-bold mt-4 text-gray-950 font-Primary ">
+                    {post.title}
+                  </h1>
+                  <p className="text-gray-600 font-Primary">
+                    {post.description}
+                  </p>
                 </div>
-              )}
-              <div>
-                <h1 className="text-2xl font-bold mt-4 font-Primary ">
-                  {post.title}
-                </h1>
-                <p className="text-gray-600 font-Primary">{post.description}</p>
-              </div>
-              <div className="flex items-center justify-between mt-10 ">
-                <div className="flex items-center">
-                  <LazyLoadImage
-                    id={post.$id}
-                    src={appwriteService.getFilePreview(
-                      autherDP ? autherDP : null
-                    )}
-                    alt={`Image ${post.$id}`}
-                    effect="blur"
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                  <div className="ml-2 ">
-                    <p className="text-gray-800 font-Secondary">
-                      {post.auther}
-                    </p>
-                    {/* <p className="text-gray-500 text-sm">578 followers</p> */}
+                <div className="flex items-center justify-between mt-10   ">
+                  <div className="flex items-center ">
+                    <LazyLoadImage
+                      id={post.$id}
+                      src={appwriteService.getFilePreview(
+                        autherDP ? autherDP : null
+                      )}
+                      alt={`Image ${post.$id}`}
+                      effect="blur"
+                      className="size-12 rounded-full object-cover"
+                    />
+                    <div className="ml-3 ">
+                      <p className="text-gray-600 underline font-Secondary text-xl ">
+                        {post.auther}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-3 ">
+                    <Button
+                      text="profile"
+                      className="ml-auto  px-4 py-2 rounded-full font-Secondary"
+                      onClick={() => navigate(`/profile/${post.userId}`)}
+                    />
+                    {/* save btn  */}
+                    <Button
+                      text={
+                        isSaved ? `saved ` : `${onSaveLoading ? "" : "save"}`
+                      }
+                      className="px-4 py-2 rounded-full float-end font-Primary transition-all ease-in max-sm:hidden"
+                      onClick={savePost}
+                      bgColor={
+                        isSaved ? "bg-green-600 uppercase" : "bg-gray-500"
+                      }
+                    >
+                      {onSaveLoading && (
+                        <ThreeCircles
+                          visible={true}
+                          height="30"
+                          width="30"
+                          color="#ffff"
+                          ariaLabel="three-circles-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                        />
+                      )}
+                      {isSaved ? <TiTickOutline /> : null}
+                    </Button>
                   </div>
                 </div>
-                <Button
-                  text="profile"
-                  className="ml-auto  px-4 py-2 rounded-full font-Secondary"
-                  onClick={() => navigate(`/profile/${post.userId}`)}
-                />
               </div>
             </div>
           )}
         </div>
+        {/* explore btn  */}
         {!isloading && (
-          <div className="p-4 text-center text-gray-500 flex justify-evenly  relative bottom-0 ">
-            <div className="w-2/4 flex justify-start items-center ">
-              <Button
-                text="More to explore"
-                className="px-4 py-2 rounded-full float-end font-Primary"
-                bgColor="bg-gray-500"
-                onClick={() => navigate("/home")}
-              />
-            </div>
-
-            <div className=" w-2/4 flex justify-end items-center">
-              <Button
-                text={isSaved ? `saved ` : "save"}
-                className="px-4 py-2 rounded-full float-end font-Primary transition-all ease-in"
-                onClick={savePost}
-                bgColor={isSaved ? "bg-green-600 uppercase" : "bg-red-600"}
-              >
-                {isSaved ? <TiTickOutline /> : null}
-              </Button>
-            </div>
+          <div className="p-4  flex justify-end relative bottom-0 flex-wrap">
+            <Button
+              text="More to explore"
+              className="px-4 py-2 rounded-full float-end font-Primary"
+              bgColor="bg-gray-950"
+              onClick={() => navigate("/home")}
+            />
+            {/* save btn  */}
+            <Button
+              text={isSaved ? `saved ` : `${onSaveLoading ? "" : "save"}`}
+              className="px-4 py-2 rounded-full float-end font-Primary transition-all ease-in sm:hidden"
+              onClick={savePost}
+              bgColor={isSaved ? "bg-green-600 uppercase" : "bg-gray-500"}
+            >
+              {onSaveLoading && (
+                <ThreeCircles
+                  visible={true}
+                  height="30"
+                  width="30"
+                  color="#ffff"
+                  ariaLabel="three-circles-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                />
+              )}
+              {isSaved ? <TiTickOutline /> : null}
+            </Button>
           </div>
         )}
       </div>

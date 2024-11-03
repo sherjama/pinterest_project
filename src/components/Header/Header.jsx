@@ -23,6 +23,7 @@ const Header = ({ className = "" }) => {
   // react-router-dom
   const navigate = useNavigate();
   const location = useLocation();
+  const searchBarVisiblity = location.pathname == "/home" ? true : false;
 
   // redux
   const dispatch = useDispatch();
@@ -79,17 +80,12 @@ const Header = ({ className = "" }) => {
             className="flex items-center  justify-between hover:bg-gray-300  p-2 rounded-full"
             onClick={() => setToggle((prev) => !prev)}
           >
-            {<Logo className="max-[360px]:hidden" />}
-            <Dp
-              className="size-10 min-[360px]:hidden"
-              onClick={() => navigate(`/profile/${userdata.$id}`)}
-            />
-            <span className="text-[#111111] text-lg font-normal pl-1 font-Secondary selection:text-[#111111] max-[360px]:hidden">
+            {<Logo />}
+
+            <span className="text-[#111111] text-lg font-normal pl-1 font-Secondary selection:text-[#111111]  max-[425px]:hidden">
               Pinterest
             </span>
-            <span className="text-[#111111] text-lg font-normal pl-1 font-Secondary selection:text-[#111111] min-[360px]:hidden">
-              {userdata ? userdata.name : "Pinterest"}
-            </span>
+
             {/* hamberger menu  */}
             <span className=" ml-2">
               <TiThMenu size={16} color="#1b1b1f" />
@@ -111,22 +107,15 @@ const Header = ({ className = "" }) => {
               >
                 <p className="font-Primary font-semibold text-sm">Home</p>
               </NavLink>
-              {/* <NavLink
-              to={"/explore"}
-              className={({ isActive }) =>
-                `${
-                  isActive ? "bg-black text-white p-3 rounded-full" : ""
-                } p-3 ${!authstatus ? "hidden" : ""}`
-              }
-            >
-              <p className="font-Primary font-semibold text-sm">Explore</p>
-            </NavLink> */}
+
               <NavLink
                 to={"/creation-pin/create"}
                 className={({ isActive }) =>
                   `${
-                    isActive ? "bg-black text-white p-3 rounded-full" : ""
-                  } p-3 ${!authstatus ? "hidden" : ""}`
+                    isActive
+                      ? "bg-black text-white p-3 hover:bg-black"
+                      : "hover:bg-slate-300"
+                  } p-3 ${!authstatus ? "hidden" : ""} rounded-full`
                 }
               >
                 <p className="font-Primary font-semibold text-sm">Create</p>
@@ -135,8 +124,10 @@ const Header = ({ className = "" }) => {
                 to={"/blog"}
                 className={({ isActive }) =>
                   `${
-                    isActive ? "bg-black text-white p-3 rounded-full" : ""
-                  } p-3 max-[1080px]:hidden`
+                    isActive
+                      ? "bg-black text-white p-3 hover:bg-black"
+                      : "hover:bg-slate-300"
+                  } p-3 max-[1080px]:hidden rounded-full`
                 }
               >
                 <p className="font-Primary font-semibold text-sm">Blog</p>
@@ -145,8 +136,10 @@ const Header = ({ className = "" }) => {
                 to={"/contact-us"}
                 className={({ isActive }) =>
                   `${
-                    isActive ? "bg-black text-white p-3 rounded-full" : ""
-                  } p-3 `
+                    isActive
+                      ? "bg-black text-white p-3 hover:bg-black"
+                      : "hover:bg-slate-300"
+                  } p-3 rounded-full`
                 }
               >
                 <p className="font-Primary font-semibold text-sm">Contact</p>
@@ -169,7 +162,7 @@ const Header = ({ className = "" }) => {
             searchTgl ? "hidden" : ""
           }`}
         >
-          {authstatus && (
+          {authstatus && searchBarVisiblity && (
             <span
               className="sm:hidden relative  rounded-full p-2 bg-gray-300 mr-2"
               // onClick={() => setSearchTgl(true)}
@@ -179,7 +172,7 @@ const Header = ({ className = "" }) => {
             </span>
           )}
           <Dp
-            className="size-10 max-[360px]:hidden"
+            className="size-10"
             onClick={() => navigate(`/profile/${userdata.$id}`)}
           />
 
