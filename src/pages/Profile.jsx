@@ -3,7 +3,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import LoadingBar from "react-top-loading-bar";
 // react
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 // index file
 import { PinsGrid, Button } from "../components/index";
 // appwrite
@@ -11,6 +11,7 @@ import appwriteService from "../appwrite/config";
 import { Query } from "appwrite";
 // redux
 import { useSelector } from "react-redux";
+import authservice from "@/appwrite/auth";
 
 const Profile = () => {
   // states
@@ -28,7 +29,9 @@ const Profile = () => {
 
   // redux
   const savedpins_Store = useSelector((state) => state.pins.savedPinsDATA);
-  const { userdata } = useSelector((state) => state.authStatus);
+  const { userdata, prefs } = useSelector((state) => state.authStatus);
+
+  const navigate = useNavigate();
 
   // functions
   const LoadingHandler = () => {
@@ -39,13 +42,18 @@ const Profile = () => {
   const getUserDetails = async () => {
     const user = userId == userdata.$id ? true : false;
     setisLogedinUser(user);
-    await appwriteService
+    const res = await appwriteService
       .ListPosts([Query.equal("userId", userId)])
-      .then((post) => (post ? setPins(post) : null));
+      .then((post) => (post ? setPins(post) : false));
 
-    if (pins) {
+    if (pins.total > 0) {
       setAutherDp(pins.documents[0].autherDp);
       setAuther(pins.documents[0].auther);
+    } else {
+      if (isLogedinUser) {
+        setAuther(userdata.name);
+        setAutherDp(prefs.displayPicture);
+      }
     }
   };
 

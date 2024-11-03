@@ -23,10 +23,13 @@ const Pin = ({ pinData }) => {
 
   return (
     <div
-      className="w-full mb-5 overflow-hidden rounded-xl flex justify-center items-center flex-col flex-wrap"
+      className={`w-full mb-5 overflow-hidden rounded-xl flex justify-center items-center flex-col flex-wrap ${
+        !loaded ? "bg-gray-400" : ""
+      }`}
       id={pinData.$id}
       onClick={() => navigate(`/pin/${pinData.$id}`)}
     >
+      {/* pin image  */}
       <LazyLoadImage
         onLoad={() => setLoaded(true)}
         id={pinData.$id}
@@ -36,6 +39,8 @@ const Pin = ({ pinData }) => {
         effect="blur" // You can also use "opacity" or other effects
         className="rounded-xl hover:border-2 border-blue-400"
       />
+
+      {/* data  */}
       {loaded && (
         <div
           className={`ml-2 mt-1 size w-full min-h-16 font-Secondary `}

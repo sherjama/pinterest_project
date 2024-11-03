@@ -28,6 +28,7 @@ import { useNavigate, useParams } from "react-router-dom";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { setLoading } from "../store/loadSlice";
+import { saved } from "@/store/pinSlice";
 
 const Post = () => {
   // states
@@ -100,7 +101,9 @@ const Post = () => {
       const check = saved_posts.filter((item) => item.pinId == postid);
 
       if (check) {
-        await appwriteService.DeleteSavedPost(check[0].$id);
+        const res = await appwriteService.DeleteSavedPost(check[0].$id);
+
+        if (res) setOnSaveLoading(false);
       }
     }
   };
@@ -121,12 +124,22 @@ const Post = () => {
         try {
           setOnSaveLoading(true);
           const res = await appwriteService.addSavePost(data);
-          res ? setOnSaveLoading(false) : setOnSaveLoading(true);
+
+          if (res) {
+            const response = await appwriteService
+              .ListSavePosts(logedinUser.$id)
+              .then((posts) => {
+                posts.total >= 0 ? dispatch(saved(posts)) : null;
+              });
+
+            setOnSaveLoading(false);
+          }
         } catch (error) {
           console.log("savePost :", error);
         }
       }
     } else if (isSaved) {
+      setOnSaveLoading(true);
       // unsave post
       unSavePost();
     }
@@ -262,7 +275,7 @@ const Post = () => {
                           wrapperClass=""
                         />
                       )}
-                      {isSaved ? <TiTickOutline /> : null}
+                      {isSaved && !onSaveLoading ? <TiTickOutline /> : null}
                     </Button>
                   </div>
                 </div>
