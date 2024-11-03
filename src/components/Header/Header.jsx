@@ -217,12 +217,14 @@ const Header = ({ className = "" }) => {
             Shortcuts
           </h2>
           <nav className="min-w-20 min-h-32 pl-5 flex flex-col space-y-2 ">
-            <Link
-              to={"/home"}
-              className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
-            >
-              Home feed
-            </Link>
+            {authstatus && (
+              <Link
+                to={"/home"}
+                className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
+              >
+                Home feed
+              </Link>
+            )}
             <Link
               to={"/blog"}
               className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
@@ -237,32 +239,37 @@ const Header = ({ className = "" }) => {
             </Link>
           </nav>
         </div>
-        <span className="w-[2px] h-4/5 bg-slate-800 max-sm:hidden"></span>
-        <div className="h-min min-w-52 ">
-          <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5 max-sm:pb-0">
-            Create
-          </h2>
-          <nav className="min-w-20 min-h-32 pl-5 flex flex-col space-y-2 ">
-            <Link
-              to={"/creation-pin/create"}
-              className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
-            >
-              Create Pin
-            </Link>
-          </nav>
-        </div>
-        <span className="sm:w-[2px] sm:h-4/5 bg-slate-800 max-sm:hidden"></span>
-        <div className="sm:h-5/6 sm:min-w-52 max-sm:hidden">
-          <h2 className="font-Primary text-gray-950 font-semibold  text-xl ">
-            Create1
-          </h2>
-        </div>
-        <span className="max-sm:hidden w-[2px] h-4/5 bg-slate-800"></span>
-        <div className="sm:h-5/6 sm:min-w-52  max-sm:hidden">
-          <h2 className="font-Primary text-gray-950 font-semibold  text-xl">
-            Create2
-          </h2>
-        </div>
+
+        {authstatus && (
+          <>
+            <span className="w-[2px] h-4/5 bg-slate-800 max-sm:hidden"></span>
+            <div className="h-min min-w-52 ">
+              <h2 className="font-Primary text-gray-950 font-semibold  text-xl pb-5 max-sm:pb-0">
+                Create
+              </h2>
+              <nav className="min-w-20 min-h-32 pl-5 flex flex-col space-y-2 ">
+                <Link
+                  to={"/creation-pin/create"}
+                  className="font-Secondary text-sm text-gray-600 hover:bg-gray-200 p-4 rounded-xl"
+                >
+                  Create Pin
+                </Link>
+              </nav>
+            </div>
+            <span className="sm:w-[2px] sm:h-4/5 bg-slate-800 max-sm:hidden"></span>
+            <div className="sm:h-5/6 sm:min-w-52 max-sm:hidden">
+              <h2 className="font-Primary text-gray-950 font-semibold  text-xl ">
+                Create1
+              </h2>
+            </div>
+            <span className="max-sm:hidden w-[2px] h-4/5 bg-slate-800"></span>
+            <div className="sm:h-5/6 sm:min-w-52  max-sm:hidden">
+              <h2 className="font-Primary text-gray-950 font-semibold  text-xl">
+                Create2
+              </h2>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
