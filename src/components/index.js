@@ -14,6 +14,7 @@ import LoginAndSignupPage from "../pages/LoginSignup";
 import Error404Page from "../pages/404";
 import CreateUpdatePinPage from "./CreateUpdatePin/CreateUpdatePin";
 import PostPage from "./Post";
+import AuthLayout from "./AuthLayout";
 import Input from "./Input";
 import SearchBar from "./SearchBar";
 import Dp from "./Dp";
@@ -33,6 +34,7 @@ export {
   LoginAndSignupPage,
   Error404Page,
   CreateUpdatePinPage,
+  AuthLayout,
   PostPage,
   Button,
   SearchBar,

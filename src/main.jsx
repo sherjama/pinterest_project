@@ -19,6 +19,7 @@ import {
   Error404Page,
   CreateUpdatePinPage,
   PostPage,
+  AuthLayout,
 } from "./components/index.js";
 
 // router
@@ -29,28 +30,52 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/auth/:what",
-        element: <LoginAndSignupPage />,
+        element: (
+          <AuthLayout authentication={false}>
+            <LoginAndSignupPage />
+          </AuthLayout>
+        ),
       },
       {
         path: "/contact-us",
-        element: <ContactUsPage />,
+        element: (
+          <AuthLayout authentication>
+            <ContactUsPage />
+          </AuthLayout>
+        ),
       },
       {
         path: "/profile/:userId",
-        element: <ProfilePage />,
+        element: (
+          <AuthLayout authentication>
+            <ProfilePage />
+          </AuthLayout>
+        ),
       },
 
       {
         path: "/about",
-        element: <AboutPage />,
+        element: (
+          <AuthLayout authentication>
+            <AboutPage />
+          </AuthLayout>
+        ),
       },
       {
         path: "/home",
-        element: <HomePage />,
+        element: (
+          <AuthLayout authentication>
+            <HomePage />
+          </AuthLayout>
+        ),
       },
       {
         path: "/blog",
-        element: <BlogPage />,
+        element: (
+          <AuthLayout authentication>
+            <BlogPage />
+          </AuthLayout>
+        ),
       },
       {
         path: "/404",
@@ -58,11 +83,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/creation-pin/:state",
-        element: <CreateUpdatePinPage />,
+        element: (
+          <AuthLayout authentication>
+            <CreateUpdatePinPage />
+          </AuthLayout>
+        ),
       },
       {
         path: "/pin/:postid",
-        element: <PostPage />,
+        element: (
+          <AuthLayout authentication>
+            <PostPage />
+          </AuthLayout>
+        ),
       },
     ],
   },
