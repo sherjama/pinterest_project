@@ -16,7 +16,7 @@ export default function Protected({ children, authentication = true }) {
       navigate("/home");
     }
     setLoading(false);
-  }, []);
+  }, [authstatus, navigate, authentication]);
 
   return Loader ? <h1>Loading ....</h1> : <>{children}</>;
 }
