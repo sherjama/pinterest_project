@@ -37,7 +37,7 @@ const Pin = ({ pinData }) => {
         src={appwriteService.getFilePreview(pinData.image)}
         alt={`Image ${pinData.$id}`}
         effect="blur" // You can also use "opacity" or other effects
-        className="rounded-xl hover:border-2 border-blue-400"
+        className="rounded-xl  border-blue-400"
       />
 
       {/* data  */}
