@@ -39,7 +39,7 @@ const Pin = ({ pinData }) => {
         src={`https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${pinData.image}/view?project=66d70efe003c16e69527&mode=admin`}
         alt={`Image ${pinData.$id}`}
         effect="blur" // You can also use "opacity" or other effects
-        className="rounded-xl hover:border-2 border-blue-400"
+        className="rounded-xl hover:scale-90 border-blue-400"
       />
 
       {/* data  */}
