@@ -15,6 +15,7 @@ const Pin = ({ pinData }) => {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log(appwriteService.getFilePreview(pinData.image));
 
   // set Loading value
   useEffect(() => {
@@ -34,7 +35,8 @@ const Pin = ({ pinData }) => {
         onLoad={() => setLoaded(true)}
         id={pinData.$id}
         key={pinData.$id}
-        src={appwriteService.getFilePreview(pinData.image)}
+        // src={appwriteService.getFilePreview(pinData.image)}
+        src={`https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${pinData.image}/view?project=66d70efe003c16e69527&mode=admin`}
         alt={`Image ${pinData.$id}`}
         effect="blur" // You can also use "opacity" or other effects
         className="rounded-xl hover:border-2 border-blue-400"

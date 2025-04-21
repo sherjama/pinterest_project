@@ -210,7 +210,8 @@ const Post = () => {
             <LazyLoadImage
               onLoad={() => setIsLoading(false)}
               id={post.$id}
-              src={appwriteService.getFilePreview(postImg ? postImg : null)}
+              // src={appwriteService.getFilePreview(postImg ? postImg : null)}
+              src={`https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${postImg}/view?project=66d70efe003c16e69527&mode=admin`}
               alt={`Image ${post.$id}`}
               effect="blur"
               className="w-full min-[385px]: object-contain rounded-3xl"
@@ -233,9 +234,10 @@ const Post = () => {
                   <div className="flex items-center ">
                     <LazyLoadImage
                       id={post.$id}
-                      src={appwriteService.getFilePreview(
-                        autherDP ? autherDP : null
-                      )}
+                      // src={appwriteService.getFilePreview(
+                      //   autherDP ? autherDP : null
+                      // )}
+                      src={`https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${autherDP}/view?project=66d70efe003c16e69527&mode=admin`}
                       alt={`Image ${post.$id}`}
                       effect="blur"
                       className="size-12 rounded-full object-cover"

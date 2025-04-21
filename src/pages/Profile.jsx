@@ -113,7 +113,8 @@ const Profile = () => {
         <LazyLoadImage
           onLoad={LoadingHandler}
           id={pins.$id}
-          src={appwriteService.getFilePreview(autherDp ? autherDp : null)}
+          // src={appwriteService.getFilePreview(autherDp ? autherDp : null)}
+          src={`https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${autherDp}/view?project=66d70efe003c16e69527&mode=admin`}
           alt={`Image ${pins.$id}`}
           effect="blur"
           className="rounded-full w-24 h-24 object-cover"

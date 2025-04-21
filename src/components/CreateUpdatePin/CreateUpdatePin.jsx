@@ -60,7 +60,7 @@ const CreateUpdatePin = ({ pin }) => {
       const post = await appwriteService.GetPost(state.slice(7, state.length));
       if (post) {
         setPost(post);
-        const setImg = appwriteService.getFilePreview(post.image);
+        const setImg = `https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${post.image}/view?project=66d70efe003c16e69527&mode=admin`;
         setImage ? setPrevpin(setImg) : null;
       }
     } catch (e) {
