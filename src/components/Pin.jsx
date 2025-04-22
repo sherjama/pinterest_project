@@ -15,7 +15,6 @@ const Pin = ({ pinData }) => {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(appwriteService.getFilePreview(pinData.image));
 
   // set Loading value
   useEffect(() => {
