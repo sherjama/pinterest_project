@@ -10,7 +10,6 @@ const Dp = ({ className = "", cusstomDp = "", ...prop }) => {
   const dp = prefs
     ? `https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${prefs.displayPicture}/view?project=66d70efe003c16e69527&mode=admin`
     : "https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/670926b1000cb03e26cc/view?project=66d70efe003c16e69527&mode=admin";
-  console.log(dp);
 
   const costomDP = `https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${cusstomDp}/view?project=66d70efe003c16e69527&mode=admin`;
 

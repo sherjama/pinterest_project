@@ -34,32 +34,68 @@ const App = () => {
   const navigate = useNavigate();
 
   // useEffect's
+  // 1. Fetch user-related data on login
   useEffect(() => {
-    if (status) {
-      setuserId(userdata.$id);
-      // pins
-      appwriteService.ListPosts().then((posts) => {
-        posts ? setPins(posts) : null;
-      });
+    const fetchData = async () => {
+      if (status && userdata?.$id) {
+        const id = userdata.$id;
+        setuserId(id);
 
-      // savedPins By user
-      appwriteService.ListSavePosts(userId).then((posts) => {
-        posts.total >= 0 ? setsavedPins(posts) : null;
-      });
-    }
+        const posts = await appwriteService.ListPosts();
+        if (posts) setPins(posts);
 
+        const saved = await appwriteService.ListSavePosts(id);
+        if (saved.total >= 0) setsavedPins(saved);
+      }
+
+      if (!status) {
+        navigate("/auth/login");
+      }
+    };
+
+    fetchData();
+  }, [status, userdata, navigate]);
+
+  // 2. Dispatch pins to redux when loaded
+  useEffect(() => {
     if (pins) {
       dispatch(addPins(pins));
     }
+  }, [pins, dispatch]);
 
-    if (savedPins.total >= 0) {
+  // 3. Dispatch saved pins to redux when loaded
+  useEffect(() => {
+    if (savedPins?.total >= 0) {
       dispatch(saved(savedPins));
     }
+  }, [savedPins, dispatch]);
 
-    if (!status) {
-      navigate("/auth/login");
-    }
-  }, [pins, setPins]);
+  // useEffect(() => {
+  //   if (status) {
+  //     setuserId(userdata.$id);
+  //     // pins
+  //     appwriteService.ListPosts().then((posts) => {
+  //       posts ? setPins(posts) : null;
+  //     });
+
+  //     // savedPins By user
+  //     appwriteService.ListSavePosts(userId).then((posts) => {
+  //       posts.total >= 0 ? setsavedPins(posts) : null;
+  //     });
+  //   }
+
+  //   if (pins) {
+  //     dispatch(addPins(pins));
+  //   }
+
+  //   if (savedPins.total >= 0) {
+  //     dispatch(saved(savedPins));
+  //   }
+
+  //   if (!status) {
+  //     navigate("/auth/login");
+  //   }
+  // }, [pins, setPins]);
 
   useEffect(() => {
     if (status) {
@@ -79,6 +115,8 @@ const App = () => {
 
   // functions
   const savedPost = async () => {
+    console.log("ch");
+
     const pinIDS = saved_posts.map((item) => item.pinId);
 
     if (pinIDS.length > 0) {
