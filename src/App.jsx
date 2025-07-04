@@ -54,7 +54,7 @@ const App = () => {
     };
 
     fetchData();
-  }, [userId,dispatch,reload]);
+  }, [userdata,dispatch,reload]);
 
   // 2. Dispatch pins to redux when loaded
   useEffect(() => {
