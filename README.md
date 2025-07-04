@@ -1,6 +1,7 @@
-# Sher jama's Pinterest 
+#Sher jama's Pinterest 
 
 #Introduction
+
 As a developer, one of the best ways to sharpen your skills is to build projects that challenge your knowledge of new technologies and frameworks. For my latest project, I decided to create a Pinterest clone, a web application that mimics the functionality of Pinterest, where users can save, search, and explore visual content. This project was a fantastic opportunity to work with various frontend and backend technologies and combine them into one seamless user experience.
 
 #Project Overview
