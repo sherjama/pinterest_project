@@ -24,9 +24,9 @@ const App = () => {
   // redux
   const { status, userdata } = useSelector((state) => state.authStatus);
 
-  const saved_posts = useSelector((state) => state.pins.savedPins);
-
   const isLoaded = useSelector((state) => state.Loading.isLoading);
+
+  const {saved_posts,reload} = useSelector((state)=>state.pins)
 
   const dispatch = useDispatch();
 
@@ -54,7 +54,7 @@ const App = () => {
     };
 
     fetchData();
-  }, [status, userdata, navigate]);
+  }, [userId,dispatch,reload]);
 
   // 2. Dispatch pins to redux when loaded
   useEffect(() => {
@@ -69,33 +69,6 @@ const App = () => {
       dispatch(saved(savedPins));
     }
   }, [savedPins, dispatch]);
-
-  // useEffect(() => {
-  //   if (status) {
-  //     setuserId(userdata.$id);
-  //     // pins
-  //     appwriteService.ListPosts().then((posts) => {
-  //       posts ? setPins(posts) : null;
-  //     });
-
-  //     // savedPins By user
-  //     appwriteService.ListSavePosts(userId).then((posts) => {
-  //       posts.total >= 0 ? setsavedPins(posts) : null;
-  //     });
-  //   }
-
-  //   if (pins) {
-  //     dispatch(addPins(pins));
-  //   }
-
-  //   if (savedPins.total >= 0) {
-  //     dispatch(saved(savedPins));
-  //   }
-
-  //   if (!status) {
-  //     navigate("/auth/login");
-  //   }
-  // }, [pins, setPins]);
 
   useEffect(() => {
     if (status) {

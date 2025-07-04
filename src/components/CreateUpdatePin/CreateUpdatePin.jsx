@@ -5,11 +5,12 @@ import { TbEdit } from "react-icons/tb";
 // react
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useSelector , useDispatch} from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 // index file
 import { Input, Button } from "../index";
 import appwriteService from "../../appwrite/config";
+import { triggerReload } from "@/store/pinSlice";
 
 const CreateUpdatePin = ({ pin }) => {
   //   states
@@ -24,7 +25,9 @@ const CreateUpdatePin = ({ pin }) => {
   const [post, setPost] = useState();
 
   //   redux
+  const dispatch = useDispatch()
   const authSlice = useSelector((state) => state.authStatus);
+
 
   const { userdata, prefs } = authSlice;
 
@@ -118,6 +121,7 @@ const CreateUpdatePin = ({ pin }) => {
         });
 
         if (UpdatePin) {
+          dispatch(triggerReload())
           navigate("/home");
         }
       } catch (e) {
@@ -143,6 +147,7 @@ const CreateUpdatePin = ({ pin }) => {
             });
 
             if (createPin) {
+              dispatch(triggerReload())
               navigate(`/profile/${userdata.$id}`);
             }
           }
