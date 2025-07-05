@@ -34,8 +34,8 @@ const Pin = ({ pinData }) => {
         onLoad={() => setLoaded(true)}
         id={pinData.$id}
         key={pinData.$id}
-        // src={appwriteService.getFilePreview(pinData.image)}
-        src={`https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${pinData.image}/view?project=66d70efe003c16e69527&mode=admin`}
+        src={appwriteService.getFilePreview(pinData.image)}
+        // src={`https://fra.cloud.appwrite.io/v1/storage/buckets/66d801490026bec522c7/files/${pinData.image}/view?project=66d70efe003c16e69527&mode=admin`}
         alt={`Image ${pinData.$id}`}
         effect="blur" // You can also use "opacity" or other effects
         className="rounded-xl hover:scale-90 border-blue-400"
